@@ -1,0 +1,22 @@
+{
+  "name": "final-year-project",
+  "version": "1.0.0",
+  "description": "Parental controls & Device management on a home network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UP851899/Final-Year-Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/UP851899/Final-Year-Project/issues"
+  },
+  "homepage": "https://github.com/UP851899/Final-Year-Project#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
