@@ -4,7 +4,8 @@
   "description": "Parental controls & Device management on a home network",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dns": "node dns-server.js"
   },
   "repository": {
     "type": "git",
