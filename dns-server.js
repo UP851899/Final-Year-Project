@@ -1,46 +1,44 @@
-const dns = require('../..');
-const path = require('path');
-const fs = require('fs');
+const dns2 = require('dns2');
 
-const { Packet } = dns;
+const { Packet } = dns2;
 
-// Create a SSL enabled server
-const server = dns.createServer({
-    udp: true,
-    tcp: true,
-    doh: {
-        ssl: true,
-        cert: fs.readFileSync(path.join(__dirname, 'server.crt')),
-        key: fs.readFileSync(path.join(__dirname, 'secret.key')),
-    },
-});
-
-// Handle the incoming request (same style as both UDP and TCP server)
-server.on('request', (request, send, client) => {
+const server = dns2.createServer({
+  udp: true,
+  handle: (request, send, rinfo) => {
     const response = Packet.createResponseFromRequest(request);
-    const [question] = request.questions;
+    const [ question ] = request.questions;
     const { name } = question;
     response.answers.push({
-        name,
-        type: Packet.TYPE.A,
-        class: Packet.CLASS.IN,
-        ttl: 300,
-        address: '1.1.1.1',
+      name,
+      type: Packet.TYPE.A,
+      class: Packet.CLASS.IN,
+      ttl: 300,
+      address: '8.8.8.8'
     });
     send(response);
+  }
 });
 
-(async () => {
-    const closed = new Promise(resolve => process.on('SIGINT', resolve));
-    await server.listen({
-        doh: 8443,
-        udp: 5333,
-        tcp: 5334,
-    });
-    console.log('Listening.');
-    console.log(server.addresses());
-    await closed;
-    process.stdout.write('\n');
-    await server.close();
-    console.log('Closed.');
-})();
+server.on('request', (request, response, rinfo) => {
+  console.log("Request ID -", request.header.id, request.questions[0], request.address, rinfo.address);
+});
+
+server.on('requestError', (error) => {
+  console.log('Client sent an invalid request', error);
+});
+
+server.on('listening', () => {
+  console.log(server.addresses());
+});
+
+server.on('close', () => {
+  console.log('server closed');
+});
+
+server.listen({
+  // Optionally specify port and/or address for each server:
+  udp: { port: 5333 }
+});
+
+// eventually
+// server.close();
