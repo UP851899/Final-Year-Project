@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/UP851899/Final-Year-Project#readme",
   "dependencies": {
+    "dns2": "^2.0.1",
     "express": "^4.17.3"
   }
 }
