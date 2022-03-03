@@ -6,7 +6,7 @@ const server = http.createServer((clientRequest, clientResponse) => {
     // parsing
     const requestParse = url.parse(clientRequest.url);
 
-    // Frame the request
+    // Frame the request for ease of use later on
     const options = {
         method: clientRequest.method,
         headers: clientRequest.headers,
@@ -21,9 +21,9 @@ const server = http.createServer((clientRequest, clientResponse) => {
     // executeRequest(options, clientRequest, clientResponse)
 
     // Test website block
-    const hostName = requestParse.hostname;
-    if (hostName.contains("cern") {
-        break
+    const hostName = (requestParse.hostname).toString;
+    if (hostName.indexOf("cern")) {
+        console.log("Website blocked")
     } else {
         executeRequest(options, clientRequest, clientResponse)
     }
