@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const url = require('url');
 
 // Simple HTTP server
@@ -29,6 +30,8 @@ const server = http.createServer((clientRequest, clientResponse) => {
     }
 });
 
+
+// Execute HTTP Requests
 const executeRequest = (options, clientRequest, clientResponse) => {
     const externalRequest = http.request(options, (externalResponse) => {
 
@@ -53,6 +56,11 @@ const executeRequest = (options, clientRequest, clientResponse) => {
     })
 }
 
+// Listen for HTTP request on port 8080
 server.listen(8080, () => {
-    console.log("Proxy running on port 8080");
-})
+    console.log("HTTP proxy running on port 8080");
+});
+
+httpsServer.listen(8081, () => {
+    console.log("HTTPS proxy running on port 8081");
+});
