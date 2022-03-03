@@ -18,11 +18,20 @@ const server = http.createServer((clientRequest, clientResponse) => {
     console.log(`${options.method} : http://${options.host}${options.path}`);
 
     // Execute request
-    executeRequest(options, clientRequest, clientResponse)
+    // executeRequest(options, clientRequest, clientResponse)
+
+    // Test website block
+    const hostName = requestParse.hostname;
+    if (hostName.contains("cern") {
+        break
+    } else {
+        executeRequest(options, clientRequest, clientResponse)
+    }
 });
 
 const executeRequest = (options, clientRequest, clientResponse) => {
     const externalRequest = http.request(options, (externalResponse) => {
+
         // Response from external web server
         clientResponse.writeHead(externalResponse.statusCode, externalResponse.headers);
 
