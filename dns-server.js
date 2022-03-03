@@ -20,7 +20,7 @@ const server = dns2.createServer({
 });
 
 server.on('request', (request, response, rinfo) => {
-  console.log("Request ID -", request.header.id, request.questions[0], request.address, rinfo.address);
+  console.log("Request ID -", request.header.id, request.questions[0], request.IN, request.address, rinfo.address);
 });
 
 server.on('requestError', (error) => {
@@ -36,7 +36,6 @@ server.on('close', () => {
 });
 
 server.listen({
-  // Optionally specify port and/or address for each server:
   udp: { port: 5333 }
 });
 
