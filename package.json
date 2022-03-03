@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/UP851899/Final-Year-Project#readme",
   "dependencies": {
-    "express": "^4.17.3"
+    "express": "^4.17.3",
+    "http": "^0.0.1-security"
   }
 }

@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 8080; // Local machine testing
 
 app.get('/', (req, res) => {
-    res.send('Success');
+    console.log(req);
+    res.send("test received")
 });
 
-// Console log for server start - Testing on local machine
-app.listen(port, (e) => {
-    console.log(`server ${e ? 'failed to start' : `listening on port ${port}`}`);
-});
+app.listen(8080, () =>
+    console.log("proxy listening on port 8080")
+)
+
