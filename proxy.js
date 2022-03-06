@@ -4,6 +4,7 @@ const https = require('https');
 const url = require('url');
 const express = require('express');
 const app = express();
+const fs = require('fs');
 
 // Simple HTTP server
 const server = http.createServer((clientRequest, clientResponse) => {
@@ -31,6 +32,23 @@ const server = http.createServer((clientRequest, clientResponse) => {
   }
 });
 
+// Simple HTTPS Server
+const httpsServer = https.createServer((clientRequest, clientResponse) => {
+
+  const httpsOptions = {
+    key: fs.readFileSync('cert.pem'),
+    cert: fs.readdirSync('key.pem'),
+    method: clientRequest.method,
+    headers: clientRequest.headers,
+    host: requestParse.hostname,
+    port: requestParse.port || 80,
+    path: requestParse.path,
+  };
+  console.log('test');
+  console.log(`${httpsOptions.method} : http://${options.host}${options.path}`);
+  executeRequest(httpsOptions, clientRequest, clientResponse);
+})
+
 
 // Execute HTTP Requests
 const executeRequest = (options, clientRequest, clientResponse) => {
@@ -57,26 +75,29 @@ const executeRequest = (options, clientRequest, clientResponse) => {
 };
 
 // Port and IP assignments for proxy server
-const port = 8080;
+const httpPort = 8080;
+const httpsPort = 4433;
+const expressPort = 8082;
 const hostIP = '0.0.0.0';
 
-// Express assignments
-const expressPort = 8082;
-
 // Listen for HTTP request on port 8080
-server.listen(port, hostIP, () => {
-  console.log('HTTP proxy running on port 8080');
+server.listen(httpPort, hostIP, () => {
+  console.log('HTTP proxy running on port ', httpPort);
 });
 
-app.get('/', function (req, res) {
-  res.send('Test server');
+//Listen for HTTPS request on port 8081
+httpsServer.listen(httpsPort, hostIP, () => {
+  console.log("HTTPS proxy running on port ", httpsPort);
 });
 
-app.listen(expressPort, function () {
-  console.log(`testing on port ${expressPort}`);
-});
+// Testing Express server //
 
-// Listen for HTTPS request on port 8081
-// httpsServer.listen(8081, () => {
-//     console.log("HTTPS proxy running on port 8081");
+// app.get('/', function (req, res) {
+//   res.send('Test server');
 // });
+
+// app.listen(expressPort, function () {
+//   console.log(`testing on port ${expressPort}`);
+// });
+
+////////////////////////////
