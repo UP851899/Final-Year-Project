@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/UP851899/Final-Year-Project.git"
   },
-  "author": "",
+  "author": "UP851899",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/UP851899/Final-Year-Project/issues"
@@ -22,6 +22,14 @@
     "https": "^1.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.10.0"
+    "eslint": "^8.10.0",
+    "eslint-config-portsoc": "^1.0.0"
+  },
+  "eslintConfig": {
+    "extends": "portsoc",
+    "root": true,
+    "env": {
+      "browser": true
+    }
   }
 }
