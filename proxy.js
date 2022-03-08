@@ -1,103 +1,73 @@
-const res = require('express/lib/response');
-const http = require('http');
-const https = require('https');
-const url = require('url');
-const express = require('express');
-const app = express();
-const fs = require('fs');
+const httpProxy = require("http-proxy"),
+    http = require("http"),
+    url = require("url"),
+    net = require('net'),
+    port = 443, //Port for proxy running on this machines local IP
+    hostIP = '0.0.0.0',
+    expressPort = 8080;
 
-// Simple HTTP server
-const server = http.createServer((clientRequest, clientResponse) => {
-  // parsing
-  const requestParse = url.parse(clientRequest.url);
+const server = http.createServer((req, res) => {
+    let url = url.parse(req.url);
+    let target = url.protocol + "//" + url.host;
 
-  // Frame the request for ease of use later on
-  const options = {
-    method: clientRequest.method,
-    headers: clientRequest.headers,
-    host: requestParse.hostname,
-    port: requestParse.port || 80,
-    path: requestParse.path,
-  };
+    console.log("HTTP request:", target);
 
-  console.log(`${options.method} : http://${options.host}${options.path}`);
+    const proxy = httpProxy.createProxyServer({});
 
-  // Test website block
-  const hostName = (requestParse.hostname).toString();
-  if (hostName.indexOf('cern')) {
-    console.log('Website blocked');
-    clientRequest.destroy();
-  } else {
-    executeRequest(options, clientRequest, clientResponse);
-  }
-});
+    proxy.on("error", function (err, req, res) {
+        console.log("Something went wrong with the proxy - ", err);
+        res.end();
+    });
 
-// Simple HTTPS Server
-const httpsServer = https.createServer((clientRequest, clientResponse) => {
-
-  const httpsOptions = {
-    key: fs.readFileSync('cert.pem'),
-    cert: fs.readdirSync('key.pem'),
-    method: clientRequest.method,
-    headers: clientRequest.headers,
-    host: requestParse.hostname,
-    port: requestParse.port || 80,
-    path: requestParse.path,
-  };
-  console.log('test');
-  console.log(`${httpsOptions.method} : http://${options.host}${options.path}`);
-  executeRequest(httpsOptions, clientRequest, clientResponse);
+    proxy.web(req, res, { target: target });
 })
 
+// Regular expression to remove hostname, url and just be left with the port
+const regexForPort = /^([^:]+)(:([0-9]+))?$/;
 
-// Execute HTTP Requests
-const executeRequest = (options, clientRequest, clientResponse) => {
-  const externalRequest = http.request(options, (externalResponse) => {
-    // Response from external web server
-    clientResponse.writeHead(externalResponse.statusCode, externalResponse.headers);
+const getPortFromURL = (hostString, defaultPort) => {
+    let host = hostString;
+    let port = defaultPort; // Being 443, assuming its HTTPS
 
-    externalResponse.on('data', (chunk) => {
-      clientResponse.write(chunk);
-    });
-
-    externalResponse.on('end', () => {
-      clientResponse.end();
-    });
-  });
-
-  clientRequest.on('end', () => {
-    externalRequest.end();
-  });
-
-  clientRequest.on('data', (chunk) => {
-    externalRequest.write(chunk);
-  });
+    let result = regexForPort.exec(host);
+    if (result[2] != null) {
+        port = result[3]; // Port of host replaces default for try value
+    }
+    return (port);
 };
 
-// Port and IP assignments for proxy server
-const httpPort = 8080;
-const httpsPort = 4433;
-const expressPort = 8082;
-const hostIP = '0.0.0.0';
+server.addListener('connect', (req, socket, bodyhead) => {
+    let hostPort = parseInt(getPortFromURL(req.url, 443)); // Retrieve port of host in from of INT
+    let hostDomain = req.url; // Gathers domain from request
+    console.log("HTTPS request:", hostDomain, hostPort);
 
-// Listen for HTTP request on port 8080
-server.listen(httpPort, hostIP, () => {
-  console.log('HTTP proxy running on port ', httpPort);
+    /* 
+    node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
+    */
+    let proxySocket = new net.Socket();
+    proxySocket.connect(port, hostDomain, () => {
+        proxySocket.write(bodyhead);
+        socket.write("HTTP/" + req.httpVersion + " 200 Connection established\r\n\r\n");
+    }
+    );
+
+    proxySocket.on('data', (chunk) => {
+        socket.write(chunk);
+    });
+
+    proxySocket.on('end', () => {
+        socket.end();
+    });
+
+    socket.on('data', (chunk) => {
+        proxySocket.write(chunk);
+    });
+
+    socket.on('end', () => {
+        proxySocket.end();
+    });
 });
 
-//Listen for HTTPS request on port 8081
-httpsServer.listen(httpsPort, hostIP, () => {
-  console.log("HTTPS proxy running on port ", httpsPort);
-});
-
-// Testing Express server //
-
-// app.get('/', function (req, res) {
-//   res.send('Test server');
-// });
-
-// app.listen(expressPort, function () {
-//   console.log(`testing on port ${expressPort}`);
-// });
-
-////////////////////////////
+server.listen(port, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
+    console.log("Proxy running of port 8080");
+});  //this is the port your clients will connect to
