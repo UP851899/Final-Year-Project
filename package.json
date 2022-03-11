@@ -23,7 +23,9 @@
     "http": "^0.0.1-security",
     "http-proxy": "^1.18.1",
     "https": "^1.0.0",
-    "sql.js": "^1.6.2"
+    "sql.js": "^1.6.2",
+    "sqlite": "^4.0.25",
+    "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
