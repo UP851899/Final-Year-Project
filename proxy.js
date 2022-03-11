@@ -1,73 +1,93 @@
-const httpProxy = require("http-proxy"),
-    http = require("http"),
-    url = require("url"),
-    net = require('net'),
-    port = 443, //Port for proxy running on this machines local IP
-    hostIP = '0.0.0.0',
-    expressPort = 8080;
+const httpProxy = require('http-proxy');
+const http = require('http');
+const url = require('url');
+const net = require('net');
+const proxyPort = 443; // Port for proxy running on this machines local IP
+const hostIP = '0.0.0.0';
+const expressPort = 8080;
 
 const server = http.createServer((req, res) => {
-    let url = url.parse(req.url);
-    let target = url.protocol + "//" + url.host;
+  const urlParse = url.parse(req.url);
+  const target = urlParse.protocol + '//' + urlParse.host;
+  const blockList = getWebsites();
+  console.log(blockList);
 
-    console.log("HTTP request:", target);
+  console.log('HTTP request:', target);
 
-    const proxy = httpProxy.createProxyServer({});
+  const proxy = httpProxy.createProxyServer({});
 
-    proxy.on("error", function (err, req, res) {
-        console.log("Something went wrong with the proxy - ", err);
-        res.end();
-    });
+  proxy.on('error', function (err, req, res) {
+    console.log('Something went wrong with the proxy - ', err);
+    res.end();
+  });
 
-    proxy.web(req, res, { target: target });
-})
+  proxy.web(req, res, { target });
+});
 
 // Regular expression to remove hostname, url and just be left with the port
 const regexForPort = /^([^:]+)(:([0-9]+))?$/;
 
-const getPortFromURL = (hostString, defaultPort) => {
-    let host = hostString;
-    let port = defaultPort; // Being 443, assuming its HTTPS
+const getHostInfo = (hostString, defaultPort) => {
+  let host = hostString;
+  let port = defaultPort; // Being 443, assuming its HTTPS
 
-    let result = regexForPort.exec(host);
+  const result = regexForPort.exec(host);
+  if (result != null) {
+    host = result[1];
     if (result[2] != null) {
-        port = result[3]; // Port of host replaces default for try value
+      port = result[3];
     }
-    return (port);
+  }
+
+  return ([host, port]);
 };
 
 server.addListener('connect', (req, socket, bodyhead) => {
-    let hostPort = parseInt(getPortFromURL(req.url, 443)); // Retrieve port of host in from of INT
-    let hostDomain = req.url; // Gathers domain from request
-    console.log("HTTPS request:", hostDomain, hostPort);
+  /*
+        hostSplitArray uses the getHostInfo function to return an array of data from the URL
+        what is returned is the domain & the port (usually 433 for https)
+        Extracting these individual elements allows us to properly connect to the site
+        */
+  const hostSplitArray = getHostInfo(req.url, 443);
+  const hostDomain = hostSplitArray[0];
+  const hostPort = parseInt(hostSplitArray[1]);
+  console.log('HTTPS request:', hostDomain, hostPort);
 
-    /* 
-    node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
-    */
-    let proxySocket = new net.Socket();
-    proxySocket.connect(port, hostDomain, () => {
-        proxySocket.write(bodyhead);
-        socket.write("HTTP/" + req.httpVersion + " 200 Connection established\r\n\r\n");
-    }
-    );
+  /*
+        node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
+        */
+  const proxySocket = new net.Socket();
+  proxySocket.connect(hostPort, hostDomain, () => {
+    proxySocket.write(bodyhead);
+    socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
+  });
 
-    proxySocket.on('data', (chunk) => {
-        socket.write(chunk);
-    });
+  proxySocket.on('data', (chunk) => {
+    socket.write(chunk);
+  });
 
-    proxySocket.on('end', () => {
-        socket.end();
-    });
+  proxySocket.on('end', () => {
+    socket.end();
+  });
 
-    socket.on('data', (chunk) => {
-        proxySocket.write(chunk);
-    });
+  proxySocket.on('error', function () {
+    socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
+    socket.end();
+  });
 
-    socket.on('end', () => {
-        proxySocket.end();
-    });
+  socket.on('data', (chunk) => {
+    proxySocket.write(chunk);
+  });
+
+  socket.on('end', () => {
+    proxySocket.end();
+  });
+
+  socket.on('error', function () {
+    proxySocket.end();
+  });
 });
 
-server.listen(port, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
-    console.log("Proxy running of port 8080");
-});  //this is the port your clients will connect to
+server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
+  console.log('Proxy running of port 443');
+}); // this is the port your clients will connect to
