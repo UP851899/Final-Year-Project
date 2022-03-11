@@ -28,3 +28,17 @@ export async function getURLS() {
   q = 'SELECT DISTINCT site_address FROM blockedSites;';
   return db.all(q);
 }
+
+// Return array of filters
+export async function getFilters() {
+  const db = await dbConnect;
+  q = 'SELECT DISTINCT filter_name FROM websiteFilters;';
+  return db.all(q);
+}
+
+// Return Website with filter name
+export async function siteFilter() {
+  const db = await dbConnect;
+  q = 'SELECT site_address, filter_name FROM blockedSites, websiteFilters WHERE filter_ID=filter_ID';
+  return db.all(q);
+}
