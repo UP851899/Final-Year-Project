@@ -14,6 +14,8 @@ const hostIP = '0.0.0.0';
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
   const target = urlParse.protocol + '//' + urlParse.host;
+
+  // Collecting array of websites for parental blocking
   const blockList = getWebsites();
   console.log(blockList);
 
@@ -26,6 +28,7 @@ const server = http.createServer((req, res) => {
     res.end();
   });
 
+  // Send HTTP requests
   proxy.web(req, res, { target });
 });
 
@@ -47,24 +50,25 @@ const getHostInfo = (hostString, defaultPort) => {
   return ([host, port]);
 };
 
+// Handler of HTTPS requests on the network
 server.addListener('connect', (req, socket, bodyhead) => {
   /*
-        hostSplitArray uses the getHostInfo function to return an array of data from the URL
-        what is returned is the domain & the port (usually 433 for https)
-        Extracting these individual elements allows us to properly connect to the site
-        */
+    hostSplitArray uses the getHostInfo function to return an array of data from the URL
+    what is returned is the domain & the port (usually 433 for https)
+    Extracting these individual elements allows us to properly connect to the site
+  */
   const hostSplitArray = getHostInfo(req.url, 443);
   const hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
   console.log('HTTPS request:', hostDomain, hostPort);
 
   /*
-        node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
-        */
+    node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
+  */
   const proxySocket = new net.Socket();
   proxySocket.connect(hostPort, hostDomain, () => {
     proxySocket.write(bodyhead);
-    socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
+    socket.write('HTTP/' + req.httpVersion + ' 200 Connection established');
   });
 
   proxySocket.on('data', (chunk) => {
@@ -75,8 +79,8 @@ server.addListener('connect', (req, socket, bodyhead) => {
     socket.end();
   });
 
-  proxySocket.on('error', function () {
-    socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
+  proxySocket.on('error', () => {
+    socket.write('HTTP/' + req.httpVersion + ' 500 Connection error');
     socket.end();
   });
 
@@ -88,7 +92,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
     proxySocket.end();
   });
 
-  socket.on('error', function () {
+  socket.on('error', () => {
     proxySocket.end();
   });
 });
@@ -97,8 +101,9 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
-async function getURLS(req, res) {
+// Return URLS from database as array
+async function getWebsites() {
   let result = [];
   result = await db.getURLS();
   return result;
-} 
+}
