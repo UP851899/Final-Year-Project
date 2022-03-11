@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS blockedSites;
 DROP TABLE IF EXISTS websiteFilters;
 
--- Create blocked sites --
+Create blocked sites --
 CREATE TABLE websiteFilters (
     filter_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     filter_name TEXT NOT NULL,
