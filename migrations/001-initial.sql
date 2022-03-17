@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS websiteFilters;
 
 CREATE TABLE websiteFilters (
     filter_ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    filter_name TEXT NOT NULL,
+    filter_name TEXT NOT NULL
 );
 
 CREATE TABLE blockedSites (
