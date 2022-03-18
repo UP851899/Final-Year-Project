@@ -11,11 +11,12 @@ const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0';
 // const expressPort = 8080;
 
+// Collect array of website blocking parameters
+const blockList = getWebsites();
+
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
   const target = urlParse.protocol + '//' + urlParse.host;
-  // const blockList = getWebsites();
-  // console.log(blockList);
 
   console.log('HTTP request:', target);
 
@@ -97,11 +98,9 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
-/*
-
-To Do list
-
-* Populate database
-* 
-
-*/
+async function getWebsites() {
+  let result = [];
+  result = (await db.getURLS()).map(e => e.site_address);
+  console.log(result);
+  return result;
+}
