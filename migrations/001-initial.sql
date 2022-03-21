@@ -28,14 +28,14 @@ VALUES
 -- Insert Default Blocking Sites/Keywords --
 INSERT INTO blockedSites (site_address, filter_ID)
 VALUES
-    ("Reddit", 2),
-    ("Omegle.com", 3),
-    ("Tinder", 3),
-    ("Paddypower.com", 1),
-    ("Chatroulette.com", 3),
-    ("4Chan", 3),
+    ("reddit", 2),
+    ("omegle.com", 3),
+    ("tinder", 3),
+    ("paddypower.com", 1),
+    ("chatroulette.com", 3),
+    ("4chan", 3),
     ("ebay.com", 6),
-    ("Amazon.com", 6);
+    ("amazon.com", 6);
 
 
     
