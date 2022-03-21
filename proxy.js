@@ -56,26 +56,31 @@ server.addListener('connect', (req, socket, bodyhead) => {
   Extracting these individual elements allows us to properly connect to the site
   */
   const hostSplitArray = getHostInfo(req.url, 443);
-  const hostDomain = hostSplitArray[0];
+  let hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
   console.log('HTTPS request:', hostDomain, hostPort);
-  executeRequest();
+ 
 
-  // blockList.forEach(url => {
-  //   console.log(url);
-  // });
-  // for (const url of blockList) {
-  //   if ((hostDomain).indexOf(url) > -1) {
-  //     console.log('Blocked!', hostDomain);
-  //   } else {
-  //     executeRequest();
-  //   }
-  // }
+  for (const url of blockList) {
+    if ((hostDomain).indexOf(url) > -1) {
+      console.log('Blocked!', hostDomain);
+      req.destroy;
+      hostDomain = null;
+      break;
+    }
+  }
+  executeRequest();
 
   // Execute the HTTPS requests
   function executeRequest() {
     // node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
     const proxySocket = new net.Socket();
+
+    // If website is on blocklist, hostDomain was set to null, .end() will stop the request and continue to next
+    if (hostDomain == null) {
+      proxySocket.end();
+    }
+
     proxySocket.connect(hostPort, hostDomain, () => {
       proxySocket.write(bodyhead);
       socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
