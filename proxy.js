@@ -13,6 +13,7 @@ const hostIP = '0.0.0.0';
 
 // Collect array of website blocking parameters
 const blockList = getWebsites();
+console.log(getWebsites);
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
@@ -50,48 +51,58 @@ const getHostInfo = (hostString, defaultPort) => {
 
 server.addListener('connect', (req, socket, bodyhead) => {
   /*
-        hostSplitArray uses the getHostInfo function to return an array of data from the URL
-        what is returned is the domain & the port (usually 433 for https)
-        Extracting these individual elements allows us to properly connect to the site
-        */
+  hostSplitArray uses the getHostInfo function to return an array of data from the URL
+  what is returned is the domain & the port (usually 433 for https)
+  Extracting these individual elements allows us to properly connect to the site
+  */
   const hostSplitArray = getHostInfo(req.url, 443);
   const hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
   console.log('HTTPS request:', hostDomain, hostPort);
+  executeRequest();
 
-  /*
-        node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
-        */
-  const proxySocket = new net.Socket();
-  proxySocket.connect(hostPort, hostDomain, () => {
-    proxySocket.write(bodyhead);
-    socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
-  });
+  // for (const url of blockList) {
+  //   if ((hostDomain).indexOf(url) > -1) {
+  //     console.log('Blocked!', hostDomain);
+  //   } else {
+  //     executeRequest();
+  //   }
+  // }
 
-  proxySocket.on('data', (chunk) => {
-    socket.write(chunk);
-  });
+  // Execute the HTTPS requests
+  function executeRequest() {
+    // node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
+    const proxySocket = new net.Socket();
+    proxySocket.connect(hostPort, hostDomain, () => {
+      proxySocket.write(bodyhead);
+      socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
+    });
 
-  proxySocket.on('end', () => {
-    socket.end();
-  });
+    proxySocket.on('data', (chunk) => {
+      socket.write(chunk);
+    });
 
-  proxySocket.on('error', function () {
-    socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
-    socket.end();
-  });
+    proxySocket.on('end', () => {
+      socket.end();
+    });
 
-  socket.on('data', (chunk) => {
-    proxySocket.write(chunk);
-  });
+    proxySocket.on('error', function () {
+      socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
+      socket.end();
+    });
 
-  socket.on('end', () => {
-    proxySocket.end();
-  });
+    socket.on('data', (chunk) => {
+      proxySocket.write(chunk);
+    });
 
-  socket.on('error', function () {
-    proxySocket.end();
-  });
+    socket.on('end', () => {
+      proxySocket.end();
+    });
+
+    socket.on('error', function () {
+      proxySocket.end();
+    });
+  }
 });
 
 server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
@@ -100,7 +111,9 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
 
 async function getWebsites() {
   let result = [];
-  result = (await db.getURLS()).map(e => e.site_address);
+  result = (await db.getURLS()).map(values => {
+    return values.address;
+  });
   console.log(result);
   return result;
 }
