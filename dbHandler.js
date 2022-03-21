@@ -25,7 +25,7 @@ let q;
 // Return array of site addresses
 export async function getURLS() {
   const db = await dbConnect;
-  q = 'SELECT DISTINCT site_address FROM blockedSites;';
+  q = 'SELECT DISTINCT site_address address FROM blockedSites;';
   return db.all(q);
 }
 
