@@ -12,8 +12,8 @@ const hostIP = '0.0.0.0';
 // const expressPort = 8080;
 
 // Collect array of website blocking parameters
-const blockList = getWebsites();
-console.log(getWebsites);
+// eslint-disable-next-line
+const blockList = await getWebsites();
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
@@ -61,6 +61,9 @@ server.addListener('connect', (req, socket, bodyhead) => {
   console.log('HTTPS request:', hostDomain, hostPort);
   executeRequest();
 
+  // blockList.forEach(url => {
+  //   console.log(url);
+  // });
   // for (const url of blockList) {
   //   if ((hostDomain).indexOf(url) > -1) {
   //     console.log('Blocked!', hostDomain);
@@ -110,10 +113,7 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
 }); // this is the port your clients will connect to
 
 async function getWebsites() {
-  let result = [];
-  result = (await db.getURLS()).map(values => {
-    return values.address;
-  });
-  console.log(result);
-  return result;
+  const result = await db.getURLS();
+  const array = result.map((value) => value.address);
+  return array;
 }
