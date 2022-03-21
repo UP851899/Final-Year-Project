@@ -61,12 +61,12 @@ server.addListener('connect', (req, socket, bodyhead) => {
   console.log('HTTPS request:', hostDomain, hostPort);
  
 
+  // Comparing the domain to each blocked site in the database array
   for (const url of blockList) {
     if ((hostDomain).indexOf(url) > -1) {
       console.log('Blocked!', hostDomain);
-      req.destroy;
-      hostDomain = null;
-      break;
+      hostDomain = null; // Remove domain address from request
+      break; // breaks loop to execute the request with null domain value
     }
   }
   executeRequest();
