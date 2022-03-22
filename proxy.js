@@ -1,4 +1,5 @@
 import { createRequire } from 'module';
+import { hostname } from 'os';
 import * as db from './dbHandler.js';
 
 const require = createRequire(import.meta.url); // allows use of require in file
@@ -9,7 +10,28 @@ const url = require('url');
 const net = require('net');
 const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0';
-// const expressPort = 8080;
+
+// -------------------------------------------------------------------------------------------------- //
+
+// --------------- //
+// Express Configs //
+// --------------- //
+
+const express = require('express');
+const app = express();
+const expressPort = 8080;
+
+app.listen(expressPort, (e) => {
+  console.log(`Express server ${e ? 'Failed to start' : `Server running on port ${expressPort}`}`);
+})
+
+app.use(express.json());
+
+// -------------------------------------------------------------------------------------------------- //
+
+// ---------------------- //
+// HTTP and HTTPS servers //
+// ---------------------- //
 
 // Collect array of website blocking parameters
 // eslint-disable-next-line
@@ -116,6 +138,10 @@ server.addListener('connect', (req, socket, bodyhead) => {
 server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
+
+// -------------------------------------------------------------------------------------------------- //
+
+// Function to get list of websites from the blocklist on database
 
 async function getWebsites() {
   const result = await db.getURLS();
