@@ -33,9 +33,16 @@ app.use(express.json());
 // HTTP and HTTPS servers //
 // ---------------------- //
 
-// Collect array of website blocking parameters
-// eslint-disable-next-line
-const blockList = await getWebsites();
+// Collect array of website blocking parameters, refresh blockList will re-query the database to manage possible changes
+let blockList;
+await getWebsites();
+
+const refreshBlocklist = setInterval(() => {
+  getWebsites();
+  // console.log('blocklist updated'); // Testing update
+  // console.log(blockList);
+}, 60000)
+
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
@@ -146,5 +153,5 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
 async function getWebsites() {
   const result = await db.getURLS();
   const array = result.map((value) => value.address);
-  return array;
+  blockList = array;
 }
