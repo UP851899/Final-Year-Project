@@ -41,7 +41,7 @@ const refreshBlocklist = setInterval(() => {
   getWebsites();
   // console.log('blocklist updated'); // Testing update
   // console.log(blockList);
-}, 60000)
+}, 60000) // 60000ms
 
 
 const server = http.createServer((req, res) => {
