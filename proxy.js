@@ -9,7 +9,19 @@ const url = require('url');
 const net = require('net');
 const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0';
-// const expressPort = 8080;
+
+// Express front end server setup \\
+const express = require('express');
+const app = express();
+const expressPort = 8080;
+app.listen(expressPort, hostIP, (e) => {
+  console.log(`web server ${e ? 'failed to start' : `listening on port ${expressPort}`}`);
+});
+
+app.use(express.json());
+app.use('/', express.static('frontend', { extensions: ['html'] }), (req, res) => {
+  res.redirect('/home.html')
+});
 
 // Collect array of website blocking parameters
 let blockList;
