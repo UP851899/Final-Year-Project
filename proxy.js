@@ -12,8 +12,16 @@ const hostIP = '0.0.0.0';
 // const expressPort = 8080;
 
 // Collect array of website blocking parameters
-// eslint-disable-next-line
-const blockList = await getWebsites();
+let blockList;
+await getWebsites();
+
+// Function to refresh the blockList array with any changes made by user
+const refreshBlocklist = setInterval(() => {
+  getWebsites();
+  // console.log('blocklist updated'); // Testing update
+  // console.log(blockList);
+}, 60000) // 60000ms
+
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
@@ -119,5 +127,5 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
 async function getWebsites() {
   const result = await db.getURLS();
   const array = result.map((value) => value.address);
-  return array;
+  blockList = array;
 }
