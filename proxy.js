@@ -19,9 +19,10 @@ app.listen(expressPort, hostIP, (e) => {
 });
 
 app.use(express.json());
-app.use('/', express.static('frontend', { extensions: ['html'] }), (req, res) => {
-  res.redirect('/home.html')
-});
+// app.use('/', express.static('frontend', { extensions: ['html'] }), (req, res) => {
+//   res.redirect('/index.html')
+// });
+app.use('/', express.static('frontend', { extensions: ['html'] }));
 
 // Collect array of website blocking parameters
 let blockList;
@@ -136,8 +137,34 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
+// Get websites for blocking functionality
 async function getWebsites() {
   const result = await db.getURLS();
   const array = result.map((value) => value.address);
   blockList = array;
 }
+
+// Get websites and corresponding filter for dashboard display
+async function getWebsitesJson(req, res) {
+  let result = [];
+  result = await db.siteFilter();
+  return res.json(result)
+}
+
+// Get filters for dashboard display
+async function getFiltersJson(req, res) {
+  const result = await db.getFilters();
+  const array = result.map((value) => value.filter);
+  return res.json(array);
+}
+
+// async wrap for functions, deals with promises and errors with database queries
+function asyncWrap(f) {
+  return (req, res, next) => {
+    Promise.resolve(f(req, res, next))
+      .catch((e) => next(e || new Error()));
+  };
+}
+
+app.get('/websites', asyncWrap(getWebsitesJson));
+app.get('/filters', asyncWrap(getFiltersJson));

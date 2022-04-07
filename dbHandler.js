@@ -19,7 +19,7 @@ async function init() {
 
 const dbConnect = init();
 
-// Queries
+// Queries variable assignment
 let q;
 
 // Return array of site addresses
@@ -32,13 +32,13 @@ export async function getURLS() {
 // Return array of filters
 export async function getFilters() {
   const db = await dbConnect;
-  q = 'SELECT DISTINCT filter_name FROM websiteFilters;';
+  q = 'SELECT DISTINCT filter_name filter FROM websiteFilters;';
   return db.all(q);
 }
 
 // Return Website with filter name
 export async function siteFilter() {
   const db = await dbConnect;
-  q = 'SELECT site_address, filter_name FROM blockedSites, websiteFilters WHERE filter_ID=filter_ID';
+  q = 'SELECT blockedSites.site_address address, websiteFilters.filter_name filter FROM blockedSites, websiteFilters WHERE blockedSites.filter_ID=websiteFilters.filter_ID';
   return db.all(q);
 }

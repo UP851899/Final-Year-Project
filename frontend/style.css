@@ -1,0 +1,150 @@
+/* Global variables */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+    /* Colours */
+    --white: #EEEEEE;
+    --lightGrey: #393E46;
+    --darkGrey: #222831;
+    --blue: #00ADB5;
+
+    /* Font and weighting */
+    --font: 'Open Sans', sans-serif;
+    --bold: 700;
+    --semiBold: 600;
+    --regular: 400;
+    --light: 300;
+}
+
+/* ---------------- */
+
+.navigations {
+    margin: -10px;
+}
+
+/* Top navigation */
+
+.top-nav {
+    background-color: var(--darkGrey);
+    overflow: hidden;
+    padding: 20px 0px 20px 0px;
+    
+}
+
+.top-nav #left {
+    float: left;
+    padding-left: 5%;
+}
+
+.top-nav #right {
+    float: right;
+    display: flex;
+    padding-right: 5%;
+}
+
+.top-nav #right .log-out {
+    background-color: var(--white);
+    border: none;
+    padding: 5px 30px 5px 30px;
+    border-radius: 15px;
+    font-size: 20px;
+    text-align: center;
+    margin-right: 20px;
+    height: fit-content;
+    margin-top: 10px;
+    font-family: var(--font);
+    font-weight: var(--regular);
+}
+
+/* -------------- */
+
+
+/* Side navigation */
+
+.side-nav {
+    margin-top: -25px;
+    margin-left: -10px;
+    display: flex;
+    overflow: hidden;
+    font-family: var(--font);
+    font-weight: var(--regular);
+    font-size: 1.5em;
+    color: var(--white)
+}
+
+.side-nav ul {
+    background-color: var(--lightGrey);
+    list-style-type: none;
+    position: fixed;
+    width: 10%;
+    max-width: 5em;
+    height: 100%;
+    padding-right: 40px;
+    align-items: center;
+}
+
+.side-nav ul li {
+    padding: 4em 0 0 0;
+    text-align: center;
+    color: var(--white)
+}
+
+.side-nav li a:link, a:visited, a:focus {
+    color: var(--white);
+    text-decoration: none;
+}
+
+/* --------------- */
+
+/* Body */
+
+/* Filter table */
+.flex-body {
+    display: flex;
+    margin-left: 15em;
+    margin-top: 2em;
+    flex-grow: 5;
+    flex-wrap: wrap;
+} 
+
+.flex-body .filter-box {
+    width: 50%;
+    max-width: 35em;
+}
+
+.flex-body h1 {
+    font-family: var(--font);
+    font-weight: var(--bold);
+}
+
+.filter-box ul li {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    list-style: none;
+    padding: 0 0 0.7em 0;
+}
+
+/* Block list table */
+.block-box #block-table {
+    border:none;
+    border-collapse: collapse;
+}
+
+.block-box #block-table th {
+    font-family: var(--font);
+    font-weight: var(--bold);
+    padding-right: 1em;
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.block-box #block-table td {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    padding-bottom: 0.7em;
+}
+
+.block-box #block-table td:first-child, th:first-child { /* For borders */
+    border-right: 1px solid var(--lightGrey);
+}
+
+/* ---- */
