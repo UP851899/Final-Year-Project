@@ -53,3 +53,14 @@ export async function newFilter(filter) {
   const db = await dbConnect;
   db.run('INSERT INTO websiteFilters(filter_name) VALUES (?)', [filter]);
 }
+
+export async function removeWebsite(website) {
+  const db = await dbConnect;
+  db.run('DELETE FROM blockedSites WHERE blockSites.site_address = (?)', [website]);
+}
+
+export async function updateWebsite(websiteOriginal, websiteNew, indexNew) {
+  const db = await dbConnect;
+  db.run('UPDATE blockSites SET site_address = (?), filter_ID = (?) WHERE site_address = (?)',
+    [websiteNew, indexNew, websiteOriginal]);
+}
