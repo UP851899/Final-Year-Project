@@ -1,7 +1,8 @@
-window.addEventListener('load', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   if (window.location.href.indexOf('blocking.html') > -1) {
-    loadFilters();
-    loadBlocklist();
+    await loadFilters();
+    await loadBlocklist();
+    addRowHandlers();
     document.getElementById('blocking').style.fontWeight = '700';
   }
 });
@@ -49,21 +50,19 @@ async function loadBlocklist() {
     blocklistFetch = undefined;
   }
 
-  for (const i of blocklistFetch) {
-    addToTable(i.address, i.filter);
-  }
-}
-
-// Add new rows to table from loadBlocklist
-function addToTable(website, filter) {
   const blockTable = document.getElementById('block-table');
+  for (const i of blocklistFetch) {
+    // addToTable(i.address, i.filter);
+    const newRow = document.createElement('tr');
 
-  const newRow = blockTable.insertRow(1);
-  const cellOne = newRow.insertCell(0);
-  const cellTwo = newRow.insertCell(1);
+    newRow.appendChild(document.createElement('td'));
+    newRow.appendChild(document.createElement('td'));
 
-  cellOne.innerHTML = website;
-  cellTwo.innerHTML = filter;
+    newRow.cells[0].appendChild(document.createTextNode(i.address));
+    newRow.cells[1].appendChild(document.createTextNode(i.filter));
+
+    blockTable.appendChild(newRow);
+  }
 }
 
 // Add website modal
@@ -151,3 +150,24 @@ saveFilter.onclick = () => {
 
   filterInput.value = '';
 };
+
+// Select row in website table
+
+function addRowHandlers() {
+  const table = document.getElementById('block-table');
+  console.log(table.rows.length);
+  const rows = table.getElementsByTagName('tr');
+  for (let i = 0; i < rows.length; i++) {
+    const currentRow = table.rows[i];
+    const createClickHandler =
+      function (row) {
+        return function () {
+          const cell = row.getElementsByTagName('td')[0];
+          const id = cell.innerHTML;
+          alert('id:' + id);
+        };
+      };
+
+    currentRow.onclick = createClickHandler(currentRow);
+  }
+}
