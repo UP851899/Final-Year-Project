@@ -8,25 +8,25 @@
         
 </head>
 <body>
-<div class="navigations">
-    <div class="top-nav">
+    <div class="navigations">
+        <div class="top-nav">
 
-        <div id="left">
-            <a class="menu-toggle">
-                <img id='menuToggle' src="./images/menuToggle.svg"/>
-            </a>
-        </div>
+            <div id="left">
+                <a class="menu-toggle">
+                    <img id='menuToggle' src="./images/menuToggle.svg"/>
+                </a>
+            </div>
+            
+            <div id="right">
+                <a class="log-out">Log Out</a>
         
-        <div id="right">
-            <a class="log-out">Log Out</a>
-    
-            <a class="user-icon">
-                <img id="userIcon" src="./images/userIcon.svg"/>
-            </a>
+                <a class="user-icon">
+                    <img id="userIcon" src="./images/userIcon.svg"/>
+                </a>
+            </div>
+            
         </div>
-        
     </div>
-</div>
 
 
     <div class="side-nav">
@@ -38,6 +38,7 @@
             <li><a class="Admin" href="admin.html">Admin</a></li>
         </ul>
     </div>
+
     <div class="flex-body">
         <div class="filter-box">
             <h1>Filters</h1>
@@ -65,43 +66,53 @@
         </div>
     </div>
 
-    <div class="add-Website-Modal">
+    <div class="modals">
+
+        <div class="add-Website-Modal">
+            <div class="add-website-content">
+                <span class="close-add">&times;</span>
+                <h2>Add website or keyword</h2>
+
+                <!-- action="/newWebsite" method="POST" removed for javascript version -->
+                <form id="new-website-form">
+                    <label for="website-input">Website address or keyword</label>
+                    <input type="text" id="website" name="website" placeholder="Address or keyword">
         
-        <div class="add-website-content">
-            <span class="close-add">&times;</span>
-            <h2>Add website or keyword</h2>
+                    <label for="filter-select">Filter</label>
+                    <select id="filter" name="filter">
+                        <option value='null'>Select a filter</option>
+                    </select>
+                    <button type="submit" id="submit-website-add">Save</button>
+                    <button type="button" id="close-website-add">Cancel</button>
+                </form>
 
-            <form method="POST" action="/newWebsite" id="new-website-form">
-                <label for="website-input">Website address or keyword</label>
-                <input type="text" id="website-input" name="website" placeholder="Address or keyword">
-    
-                <label for="filter-select">Filter</label>
-                <select id="filter-select" name="filter">
-                    <option value='null'>Select a filter</option>
-                </select>
-                <button type="submit" id="submit-website-add">Save</button>
-                <button type="button" id="close-website-add">Cancel</button>
-            </form>
-
+            </div>
         </div>
-        
-    </div>
 
-    <div class="edit-Website-Modal">
-        
-        <div class="edit-website-content">
-            <span class="close-edit">&times;</span>
+        <div class="edit-Website-Modal">
+            
+            <div class="edit-website-content">
+                <span class="close-edit">&times;</span>
+            </div>
+            
         </div>
-        
-    </div>
 
-    <div class="add-Filter-Modal">
-        
-        <div class="add-Filter-content">
-            <span class="close-filter">&times;</span>
-            <p>test</p>
+        <div class="add-Filter-Modal">
+            
+            <div class="add-filter-content">
+                <span class="close-filter">&times;</span>
+                <h2>Add a custom filter</h2>
+                <form id="new-filter-form">
+                    <label for="website-input">Enter name of new filter</label>
+                    <input type="text" id="filter-input" name="filter-input" placeholder="Enter filter name">
+
+                    <button type="submit" id="submit-filter-add">Save</button>
+                    <button type="button" id="close-filter-add">Cancel</button>
+                </form>
+            </div>
+            
         </div>
-        
+
     </div>
 </body>
 

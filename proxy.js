@@ -13,6 +13,7 @@ const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0';
 
 // Express front end server setup \\
+const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 const expressPort = 8080;
@@ -21,10 +22,11 @@ app.listen(expressPort, hostIP, (e) => {
 });
 
 app.use(express.json());
-// app.use('/', express.static('frontend', { extensions: ['html'] }), (req, res) => {
-//   res.redirect('/index.html')
-// });
 app.use('/', express.static('frontend', { extensions: ['html'] }));
+
+// body-parser config for expreess
+app.use(bodyParser.urlencoded({ extended: true })) 
+app.use(bodyParser.json());
 
 // Collect array of website blocking parameters
 let blockList;
@@ -171,12 +173,28 @@ function asyncWrap(f) {
 app.get('/websites', asyncWrap(getWebsitesJson));
 app.get('/filters', asyncWrap(getFiltersJson));
 
-app.post('/newWebsite', function (req, res, next) {
+// Grabs values when user saves on "add website"
+app.post('/newWebsite', (req, res, next) => {
   try {
-    db.newWebsite(res.body.website, res.body.filter)
+    db.newWebsite(req.body.website, req.body.id)
+    // console.log(req.body.website); // For testing
+    // console.log(req.body.id);
     res.redirect('/blocking.html')
-    next()
-  }catch(err){
+    next();
+  } catch(err) {
+    console.log(err);
+    res.redirect('/blocking.html')
+  }
+})
+
+// Grabs values when user saves on "add filter"
+app.post('/newFilter', (req, res, next) => {
+  try {
+    db.newFilter(req.body.filter)
+    // console.log(req.body.filter); // For testing
+    res.redirect('/blocking.html')
+    next();
+  } catch(err) {
     console.log(err);
     res.redirect('/blocking.html')
   }

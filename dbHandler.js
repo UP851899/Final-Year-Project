@@ -43,8 +43,13 @@ export async function siteFilter() {
   return db.all(q);
 }
 
-export async function newWebsite(website, filterName) {
+export async function newWebsite(website, index) {
+  // console.log(website, index);
   const db = await dbConnect;
-  const index = db.all('SELECT filter_ID id FROM websiteFilters WHERE filter_name = ?', [filterName]);
   db.run('INSERT INTO blockedSites(site_address, filter_ID) VALUES (?, ?)', [website, index]);
+}
+
+export async function newFilter(filter) {
+  const db = await dbConnect;
+  db.run('INSERT INTO websiteFilters(filter_name) VALUES (?)', [filter]);
 }

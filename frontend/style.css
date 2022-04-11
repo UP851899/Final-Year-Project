@@ -153,10 +153,12 @@
 }
 
 .block-box #block-table #colOne {
-    padding-right: 6em;
+    padding-right: 10em;
+    min-width: 15em;
 }
 .block-box h1 {
     margin-left: -30px;
+
 }
 
 .block-box #block-table #colTwo {
@@ -189,15 +191,18 @@ body button {
     margin-right: 5px;
 }
 
-.filter-box #add-site-btn {
-    margin-left: 20px;
+.filter-box #add-filter-btn {
+    margin-left: 35px;
 }
+
+
 
 /* ---- */
 
-/* Modal - add website */
+/* Modal - add website & add filter */
 
-.add-Website-Modal {
+.add-Website-Modal, 
+.add-Filter-Modal {
     display: none; /* Hidden by default */
     position: fixed; 
     z-index: 1; /* Sit on top */
@@ -211,13 +216,14 @@ body button {
     background-color: rgba(0,0,0,0.5);
   }
 
-  .add-website-content h2 {
+  .modals h2  {
     font-family: var(--font);
     font-weight: var(--bold);
   }
   
   /* Modal Content */
-  .add-website-content {
+  .add-website-content, 
+  .add-filter-content {
     background-color: var(--white);
     margin: auto;
     padding: 20px;
@@ -226,7 +232,8 @@ body button {
   }
   
   /* The Close Button */
-  .add-website-content .close-add {
+  .add-website-content .close-add, 
+  .add-filter-content .close-filter {
     color: var(--lighterGrey);
     float: right;
     font-size: 28px;
@@ -234,7 +241,9 @@ body button {
   }
   
   .add-website-content .close-add:hover,
-  .add-website-content .close-add:focus {
+  .add-website-content .close-add:focus,
+  .add-filter-content .close-filter:hover,
+  .add-filter-content .close-filter:focus {
     color: var(--darkGrey);
     text-decoration: none;
     cursor: pointer;
@@ -242,13 +251,27 @@ body button {
 
   .add-website-content label, input {
     font-family: var(--font);
+    padding-bottom: 1em;
   }
 
+  .add-filter-content label, input {
+    font-family: var(--font);
+    width: 98%;
+
+  }
+
+  .add-filter-content input {
+    padding: 1em;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  
   .add-website-content input, select {
       width: 90%;
       padding: 12px 12px;
       margin-bottom: 40px;
       display: block;
   }
+
 
 /* ------------------- */

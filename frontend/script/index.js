@@ -9,7 +9,7 @@ window.addEventListener('load', () => {
 // Load Filters onto webpage from DB
 async function loadFilters() {
   const filterFetch = await fetchFilters();
-  const filterSelect = document.getElementById('filter-select');
+  const filterSelect = document.getElementById('filter');
   const ul = document.getElementById('filter-list');
 
   for (const i of filterFetch) {
@@ -69,19 +69,19 @@ function addToTable(website, filter) {
 // Add website modal
 
 const websiteModal = document.getElementsByClassName('add-Website-Modal');
-const button = document.getElementById('add-site-btn');
-const span = document.getElementsByClassName('close-add')[0];
+const addSiteButton = document.getElementById('add-site-btn');
+const spanWebAdd = document.getElementsByClassName('close-add')[0];
 
 const saveWebsite = document.getElementById('submit-website-add');
 const cancelWebsite = document.getElementById('close-website-add');
-const filterSelect = document.getElementById('filter-select');
-const websiteInput = document.getElementById('website-input');
+const filterSelect = document.getElementById('filter');
+const websiteInput = document.getElementById('website');
 
-button.onclick = () => {
+addSiteButton.onclick = () => {
   websiteModal[0].style.display = 'block';
 };
 
-span.onclick = () => {
+spanWebAdd.onclick = () => {
   websiteModal[0].style.display = 'none';
   websiteInput.value = '';
   filterSelect.value = 'null';
@@ -95,19 +95,59 @@ cancelWebsite.onclick = () => {
 
 saveWebsite.onclick = () => {
   const websiteInputted = websiteInput.value;
-  const filterSelected = filterSelect.value;
-  const filterIndex = filterSelect.selectedIndex
-
-  // Add database push
-  console.log(filterSelected);
-  console.log(websiteInputted);
-  console.log(filterIndex);
+  const filterIndex = filterSelect.selectedIndex;
 
   websiteModal[0].style.display = 'none'; // Close modal on save
 
-  const object = { website: websiteInput, id: filterIndex };
+  const object = { website: websiteInputted, id: filterIndex };
   console.log(object);
 
-  websiteInput.value = '';
-  filterSelect.value = 'null';
+  fetch('/newWebsite', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(object),
+  });
+
+  websiteInput.value = ''; // sets user input string to blank
+  filterSelect.value = 'null'; // sets selection to default
+};
+
+// Add filter modal
+
+const filterModal = document.getElementsByClassName('add-Filter-Modal');
+const addFilterButton = document.getElementById('add-filter-btn');
+const spanFilterAdd = document.getElementsByClassName('close-filter')[0];
+
+const saveFilter = document.getElementById('submit-filter-add');
+const cancelFilter = document.getElementById('close-filter-add');
+const filterInput = document.getElementById('filter-input');
+
+addFilterButton.onclick = () => {
+  filterModal[0].style.display = 'block';
+};
+
+spanFilterAdd.onclick = () => {
+  filterModal[0].style.display = 'none';
+  filterInput.value = '';
+};
+
+cancelFilter.onclick = () => {
+  filterModal[0].style.display = 'none';
+  filterInput.value = '';
+};
+
+saveFilter.onclick = () => {
+  const filterInputted = filterInput.value;
+  console.log(filterInputted);
+
+  const object = { filter: filterInputted };
+  console.log(object);
+
+  fetch('/newFilter', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(object),
+  });
+
+  filterInput.value = '';
 };
