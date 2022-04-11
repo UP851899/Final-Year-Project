@@ -104,10 +104,10 @@ saveWebsite.onclick = () => {
 
   websiteModal[0].style.display = 'none'; // Close modal on save
 
-  const object = { website: websiteInputted, id: filterIndex };
+  const object = { website: websiteInputted, id: filterIndex }; // Object for post
   console.log(object);
 
-  fetch('/newWebsite', {
+  fetch('/newWebsite', { // Post for express, frontend to backend data
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(object),
@@ -128,16 +128,16 @@ const cancelFilter = document.getElementById('close-filter-add');
 const filterInput = document.getElementById('filter-input');
 
 addFilterButton.onclick = () => {
-  filterModal[0].style.display = 'block';
+  filterModal[0].style.display = 'block'; // Set modal to visible
 };
 
 spanFilterAdd.onclick = () => {
-  filterModal[0].style.display = 'none';
+  filterModal[0].style.display = 'none'; // Hide modal
   filterInput.value = '';
 };
 
 cancelFilter.onclick = () => {
-  filterModal[0].style.display = 'none';
+  filterModal[0].style.display = 'none'; // Hide modal
   filterInput.value = '';
 };
 
@@ -148,7 +148,7 @@ saveFilter.onclick = () => {
   const object = { filter: filterInputted };
   console.log(object);
 
-  fetch('/newFilter', {
+  fetch('/newFilter', { // Post for express, frontend to backend data
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(object),
@@ -168,50 +168,51 @@ const filterUpdate = document.getElementById('filter-update');
 const websiteUpdate = document.getElementById('website-edit');
 
 editButton.onclick = () => {
-  if (selectedArray.length === 0) { // If object is empty, you cannot edit
+  if (selectedArray.length === 0) { // If array is empty, you cannot edit, nothing selected
     alert('Please select a website to edit');
-  } else { // If there is a selection, edit will open
-    console.log(selectedArray);
+  } else { // If there is a selection, edit modal will open
+    // console.log(selectedArray);
     editModal[0].style.display = 'block';
-    // const objectString = JSON.stringify(selectedArray.address.replace(/"([^"]+)":/g, '$1:'));
-    // console.log(objectString);
     websiteUpdate.value = selectedArray[0];
+    // Add database to update values
   }
 };
 
 spanEdit.onclick = () => {
-  editModal[0].style.display = 'none';
+  editModal[0].style.display = 'none'; // Hide modal
 };
 
 cancelUpdate.onclick = () => {
-  editModal[0].style.display = 'none';
+  editModal[0].style.display = 'none'; // Hide modal
 };
+
+// Add delete button
 
 // Select row in website table
 
-let selectedArray = [];
+let selectedArray = []; // Initialize array for edit website
 
-function addRowHandlers() {
+function addRowHandlers() { // Adding click events to rows on block-list table
   const table = document.getElementById('block-table');
-  console.log(table.rows.length);
+  // console.log(table.rows.length);
   const rows = table.getElementsByTagName('tr');
-  for (let i = 0; i < rows.length; i++) {
+  for (let i = 0; i < rows.length; i++) { // Loop for each row
     const currentRow = table.rows[i];
     const createClickHandler =
       function (row) {
         return function () {
           // row.classList.remove('selected');
-          if (row.classList.contains('selected')) {
+          if (row.classList.contains('selected')) { // if row is already selected, it will unselect element
             console.log('unselected');
             unselectRows();
-            selectedArray = [];
-          } else {
+            selectedArray = []; // array set to blank
+          } else { // if not selected, unselects all and selects new
             unselectRows();
             console.log('selected');
             const cell = row.getElementsByTagName('td')[0];
             const website = cell.innerHTML;
-            row.classList.add('selected');
-            selectedArray = [website];
+            row.classList.add('selected'); // class set as selected on element
+            selectedArray = [website]; // website selected to element added to array
           }
         };
       };
@@ -220,7 +221,7 @@ function addRowHandlers() {
   }
 }
 
-function unselectRows() {
+function unselectRows() { // Function to unselect all rows in block-table
   const table = document.getElementById('block-table');
   const rows = table.getElementsByTagName('tr');
   for (let i = 0; i < rows.length; i++) {
