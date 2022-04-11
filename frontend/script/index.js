@@ -11,6 +11,7 @@ window.addEventListener('DOMContentLoaded', async () => {
 async function loadFilters() {
   const filterFetch = await fetchFilters();
   const filterSelect = document.getElementById('filter');
+  const filterSelectUpdate = document.getElementById('filter-update');
   const ul = document.getElementById('filter-list');
 
   for (const i of filterFetch) {
@@ -23,6 +24,7 @@ async function loadFilters() {
     newOption.value = i;
     newOption.text = i;
     filterSelect.add(newOption, null);
+    filterSelectUpdate.add(newOption, null);
   }
 }
 
@@ -153,14 +155,37 @@ saveFilter.onclick = () => {
 
 // Edit website Modal
 const editButton = document.getElementById('edit-site-btn');
+const editModal = document.getElementsByClassName('edit-Website-Modal');
+const spanEdit = document.getElementsByClassName('close-edit')[0];
+
+const updateSite = document.getElementById('submit-website-update');
+const cancelUpdate = document.getElementById('close-website-update');
+const filterUpdate = document.getElementById('filter-update');
+const websiteUpdate = document.getElementById('website-edit');
 
 editButton.onclick = () => {
-  console.log(selectedObj);
+  if (selectedArray.length === 0) { // If object is empty, you cannot edit
+    alert('Please select a website to edit');
+  } else { // If there is a selection, edit will open
+    console.log(selectedArray);
+    editModal[0].style.display = 'block';
+    // const objectString = JSON.stringify(selectedArray.address.replace(/"([^"]+)":/g, '$1:'));
+    // console.log(objectString);
+    websiteUpdate.value = selectedArray[0];
+  }
+};
+
+spanEdit.onclick = () => {
+  editModal[0].style.display = 'none';
+};
+
+cancelUpdate.onclick = () => {
+  editModal[0].style.display = 'none';
 };
 
 // Select row in website table
 
-let selectedObj = { test: 'test' };
+let selectedArray = [];
 
 function addRowHandlers() {
   const table = document.getElementById('block-table');
@@ -175,13 +200,14 @@ function addRowHandlers() {
           if (row.classList.contains('selected')) {
             console.log('unselected');
             unselectRows();
+            selectedArray = [];
           } else {
             unselectRows();
             console.log('selected');
             const cell = row.getElementsByTagName('td')[0];
             const website = cell.innerHTML;
             row.classList.add('selected');
-            selectedObj = { address: website };
+            selectedArray = [website];
           }
         };
       };

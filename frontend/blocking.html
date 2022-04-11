@@ -81,6 +81,7 @@
                     <select id="filter" name="filter">
                         <option value='null'>Select a filter</option>
                     </select>
+
                     <button type="submit" id="submit-website-add">Save</button>
                     <button type="button" id="close-website-add">Cancel</button>
                 </form>
@@ -91,7 +92,21 @@
         <div class="edit-Website-Modal">
             
             <div class="edit-website-content">
+
                 <span class="close-edit">&times;</span>
+                <form>
+                    <label for="website-edit">Update website address or keyword</label>
+                    <input type="text" id="website-edit" name="website-edit">
+
+                    <label for="filter-update">Filter</label>
+                    <select id="filter-update" name="filter-update">
+                        <option value='null'>Select a filter</option>
+                    </select>
+
+                    <button type="submit" id="submit-website-update">Update</button>
+                    <button type="button" id="close-website-update">Cancel</button>
+                </form>
+
             </div>
             
         </div>

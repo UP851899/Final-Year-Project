@@ -210,7 +210,8 @@ body button {
 /* Modal - add website & add filter */
 
 .add-Website-Modal, 
-.add-Filter-Modal {
+.add-Filter-Modal,
+.edit-Website-Modal {
     display: none; /* Hidden by default */
     position: fixed; 
     z-index: 1; /* Sit on top */
@@ -231,7 +232,8 @@ body button {
   
   /* Modal Content */
   .add-website-content, 
-  .add-filter-content {
+  .add-filter-content,
+  .edit-website-content {
     background-color: var(--white);
     margin: auto;
     padding: 20px;
@@ -241,7 +243,8 @@ body button {
   
   /* The Close Button */
   .add-website-content .close-add, 
-  .add-filter-content .close-filter {
+  .add-filter-content .close-filter,
+  .edit-website-content .close-edit {
     color: var(--lighterGrey);
     float: right;
     font-size: 28px;
@@ -251,7 +254,9 @@ body button {
   .add-website-content .close-add:hover,
   .add-website-content .close-add:focus,
   .add-filter-content .close-filter:hover,
-  .add-filter-content .close-filter:focus {
+  .add-filter-content .close-filter:focus,
+  .edit-website-content .close-edit:hover,
+  .edit-website-content .close-edit:focus {
     color: var(--darkGrey);
     text-decoration: none;
     cursor: pointer;
@@ -262,10 +267,14 @@ body button {
     padding-bottom: 1em;
   }
 
+  .edit-website-content label, input {
+    font-family: var(--font);
+    padding-bottom: 1em;
+  }
+
   .add-filter-content label, input {
     font-family: var(--font);
     width: 98%;
-
   }
 
   .add-filter-content input {
@@ -281,5 +290,11 @@ body button {
       display: block;
   }
 
+  .edit-website-content input, select {
+    width: 90%;
+    padding: 12px 12px;
+    margin-bottom: 40px;
+    display: block;
+}
 
 /* ------------------- */
