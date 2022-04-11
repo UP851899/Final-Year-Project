@@ -1,4 +1,6 @@
+import { BADNAME } from 'dns';
 import { createRequire } from 'module';
+import { devNull } from 'os';
 import * as db from './dbHandler.js';
 
 const require = createRequire(import.meta.url); // allows use of require in file
@@ -168,3 +170,14 @@ function asyncWrap(f) {
 
 app.get('/websites', asyncWrap(getWebsitesJson));
 app.get('/filters', asyncWrap(getFiltersJson));
+
+app.post('/newWebsite', function (req, res, next) {
+  try {
+    db.newWebsite(res.body.website, res.body.filter)
+    res.redirect('/blocking.html')
+    next()
+  }catch(err){
+    console.log(err);
+    res.redirect('/blocking.html')
+  }
+})

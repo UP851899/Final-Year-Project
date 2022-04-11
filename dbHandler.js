@@ -42,3 +42,9 @@ export async function siteFilter() {
   q = 'SELECT blockedSites.site_address address, websiteFilters.filter_name filter FROM blockedSites, websiteFilters WHERE blockedSites.filter_ID=websiteFilters.filter_ID';
   return db.all(q);
 }
+
+export async function newWebsite(website, filterName) {
+  const db = await dbConnect;
+  const index = db.all('SELECT filter_ID id FROM websiteFilters WHERE filter_name = ?', [filterName]);
+  db.run('INSERT INTO blockedSites(site_address, filter_ID) VALUES (?, ?)', [website, index]);
+}
