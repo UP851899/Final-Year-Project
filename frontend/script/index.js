@@ -20,10 +20,14 @@ async function loadFilters() {
     ul.appendChild(li);
 
     // Add to 'add website modal' select option
-    const newOption = document.createElement('option');
+    let newOption = document.createElement('option');
     newOption.value = i;
     newOption.text = i;
     filterSelect.add(newOption, null);
+    // Add to 'edit website modal', cant add the same option to to lists
+    newOption = document.createElement('option');
+    newOption.value = i;
+    newOption.text = i;
     filterSelectUpdate.add(newOption, null);
   }
 }
