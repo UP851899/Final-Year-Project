@@ -4,6 +4,7 @@
 :root {
     /* Colours */
     --white: #EEEEEE;
+    --lighterGrey: #9b9b9b;
     --lightGrey: #393E46;
     --darkGrey: #222831;
     --blue: #00ADB5;
@@ -28,7 +29,6 @@
     background-color: var(--darkGrey);
     overflow: hidden;
     padding: 20px 0px 20px 0px;
-    
 }
 
 .top-nav #left {
@@ -55,6 +55,7 @@
     font-family: var(--font);
     font-weight: var(--regular);
 }
+
 
 /* -------------- */
 
@@ -102,19 +103,25 @@
 .flex-body {
     display: flex;
     margin-left: 15em;
-    margin-top: 2em;
+    margin-top: 3em;
     flex-grow: 5;
     flex-wrap: wrap;
-} 
+    padding-right: 10px;
+    height: 90%;
+}
 
-.flex-body .filter-box {
+.filter-box {
+    background-color: var(--white);
+    height: 100%;
     width: 50%;
-    max-width: 35em;
+    max-width: 25em;
+    margin-right: 2em;
 }
 
 .flex-body h1 {
     font-family: var(--font);
     font-weight: var(--bold);
+    padding-left: 1em;
 }
 
 .filter-box ul li {
@@ -125,26 +132,123 @@
 }
 
 /* Block list table */
+.block-box {
+    background-color: var(--white);
+    width: 68%;
+    min-width: 27em;
+    padding-left: 2%;
+}
+
 .block-box #block-table {
     border:none;
     border-collapse: collapse;
+
 }
 
 .block-box #block-table th {
     font-family: var(--font);
     font-weight: var(--bold);
     padding-right: 1em;
-    border-bottom: 1px solid var(--lightGrey);
+    border-bottom: 1px solid var(--lighterGrey);
+}
+
+.block-box #block-table #colOne {
+    padding-right: 6em;
+}
+.block-box h1 {
+    margin-left: -30px;
+}
+
+.block-box #block-table #colTwo {
+    padding-right: 6em;
 }
 
 .block-box #block-table td {
     font-family: var(--font);
     font-weight: var(--regular);
-    padding-bottom: 0.7em;
+    padding-bottom: 1em;
 }
 
 .block-box #block-table td:first-child, th:first-child { /* For borders */
-    border-right: 1px solid var(--lightGrey);
+    border-right: 1px solid var(--lighterGrey);
+}
+
+/* Button styling */
+
+body button {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    color: white;
+    font-size: 20px;
+    background: var(--blue);
+    padding: 10px 15px;
+    border-radius: 40px;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.filter-box #add-site-btn {
+    margin-left: 20px;
 }
 
 /* ---- */
+
+/* Modal - add website */
+
+.add-Website-Modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1; /* Sit on top */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: var(--darkGrey);
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .add-website-content h2 {
+    font-family: var(--font);
+    font-weight: var(--bold);
+  }
+  
+  /* Modal Content */
+  .add-website-content {
+    background-color: var(--white);
+    margin: auto;
+    padding: 20px;
+    border: 1px solid var(--lighterGrey);
+    width: 50%;
+  }
+  
+  /* The Close Button */
+  .add-website-content .close-add {
+    color: var(--lighterGrey);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .add-website-content .close-add:hover,
+  .add-website-content .close-add:focus {
+    color: var(--darkGrey);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .add-website-content label, input {
+    font-family: var(--font);
+  }
+
+  .add-website-content input, select {
+      width: 90%;
+      padding: 12px 12px;
+      margin-bottom: 40px;
+      display: block;
+  }
+
+/* ------------------- */
