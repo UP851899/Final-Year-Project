@@ -151,7 +151,16 @@ saveFilter.onclick = () => {
   filterInput.value = '';
 };
 
+// Edit website Modal
+const editButton = document.getElementById('edit-site-btn');
+
+editButton.onclick = () => {
+  console.log(selectedObj);
+};
+
 // Select row in website table
+
+let selectedObj = { test: 'test' };
 
 function addRowHandlers() {
   const table = document.getElementById('block-table');
@@ -162,12 +171,29 @@ function addRowHandlers() {
     const createClickHandler =
       function (row) {
         return function () {
-          const cell = row.getElementsByTagName('td')[0];
-          const id = cell.innerHTML;
-          alert('id:' + id);
+          // row.classList.remove('selected');
+          if (row.classList.contains('selected')) {
+            console.log('unselected');
+            unselectRows();
+          } else {
+            unselectRows();
+            console.log('selected');
+            const cell = row.getElementsByTagName('td')[0];
+            const website = cell.innerHTML;
+            row.classList.add('selected');
+            selectedObj = { address: website };
+          }
         };
       };
 
     currentRow.onclick = createClickHandler(currentRow);
+  }
+}
+
+function unselectRows() {
+  const table = document.getElementById('block-table');
+  const rows = table.getElementsByTagName('tr');
+  for (let i = 0; i < rows.length; i++) {
+    rows[i].classList.remove('selected');
   }
 }

@@ -175,6 +175,14 @@
     border-right: 1px solid var(--lighterGrey);
 }
 
+.block-box #block-table tr:hover {
+    background-color: #dfdfdf;
+}
+
+.block-box .selected {
+    background-color: #dfdfdf;
+}
+
 /* Button styling */
 
 body button {
