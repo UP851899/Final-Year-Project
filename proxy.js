@@ -199,3 +199,25 @@ app.post('/newFilter', (req, res, next) => {
     res.redirect('/blocking.html')
   }
 })
+
+app.post('/updateWebsite', (req, res, next) => {
+  try {
+    db.updateWebsite(req.body.originalWebsite, req.body.newWebsite, req.body.newFilter);
+    res.redirect('/blocking.html')
+    next();
+  } catch(err) {
+    console.log(err)
+    res.redirect('/blocking.html')
+  }
+})
+
+app.post('/deleteWebsite', (req, res, next) => {
+  try {
+    db.removeWebsite(req.body.website)
+    res.redirect('/blocking.html')
+    next();
+  } catch(err) {
+    console.log(err);
+    res.redirect('/blocking.html')
+  }
+})

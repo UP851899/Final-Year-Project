@@ -162,6 +162,7 @@ const editButton = document.getElementById('edit-site-btn');
 const editModal = document.getElementsByClassName('edit-Website-Modal');
 const spanEdit = document.getElementsByClassName('close-edit')[0];
 
+const deleteButton = document.getElementById('delete-website-update');
 const updateSite = document.getElementById('submit-website-update');
 const cancelUpdate = document.getElementById('close-website-update');
 const filterUpdate = document.getElementById('filter-update');
@@ -180,10 +181,51 @@ editButton.onclick = () => {
 
 spanEdit.onclick = () => {
   editModal[0].style.display = 'none'; // Hide modal
+
+  websiteUpdate.value = ''; // Reset text input back to empty
+  filterUpdate.value = ''; // Reset option select back to default
 };
 
 cancelUpdate.onclick = () => {
   editModal[0].style.display = 'none'; // Hide modal
+
+  websiteUpdate.value = ''; // Reset text input back to empty
+  filterUpdate.value = ''; // Reset option select back to default
+};
+
+updateSite.onclick = () => {
+  const website = websiteUpdate.value;
+  const filter = filterUpdate.selectedIndex;
+  const original = selectedArray[0];
+
+  const object = { originalWebsite: original, newWebsite: website, newFilter: filter };
+
+  fetch('/updateWebsite', { // Post object to /updateWebsite for express.js
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(object),
+  });
+
+  editModal[0].style.display = 'none'; // Hide modal
+  websiteUpdate.value = ''; // Reset text input back to empty
+  filterUpdate.value = ''; // Reset option select back to default
+};
+
+deleteButton.onclick = () => {
+  const original = selectedArray[0];
+
+  const object = { website: original };
+
+  fetch('/deleteWebsite', { // Post object to /deleteWebsite for express.js
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(object),
+  });
+
+  editModal[0].style.display = 'none'; // Hide modal
+  websiteUpdate.value = ''; // Reset text input back to empty
+  filterUpdate.value = ''; // Reset option select back to default
+  window.location.reload(); // Delete doesn't show until refresh, so force refresh needed
 };
 
 // Add delete button
@@ -198,24 +240,23 @@ function addRowHandlers() { // Adding click events to rows on block-list table
   const rows = table.getElementsByTagName('tr');
   for (let i = 0; i < rows.length; i++) { // Loop for each row
     const currentRow = table.rows[i];
-    const createClickHandler =
-      function (row) {
-        return function () {
-          // row.classList.remove('selected');
-          if (row.classList.contains('selected')) { // if row is already selected, it will unselect element
-            console.log('unselected');
-            unselectRows();
-            selectedArray = []; // array set to blank
-          } else { // if not selected, unselects all and selects new
-            unselectRows();
-            console.log('selected');
-            const cell = row.getElementsByTagName('td')[0];
-            const website = cell.innerHTML;
-            row.classList.add('selected'); // class set as selected on element
-            selectedArray = [website]; // website selected to element added to array
-          }
-        };
+    const createClickHandler = (row) => {
+      return () => {
+        // row.classList.remove('selected');
+        if (row.classList.contains('selected')) { // if row is already selected, it will unselect element
+          console.log('unselected');
+          unselectRows();
+          selectedArray = []; // array set to blank
+        } else { // if not selected, unselects all and selects new
+          unselectRows();
+          console.log('selected');
+          const cell = row.getElementsByTagName('td')[0];
+          const website = cell.innerHTML;
+          row.classList.add('selected'); // class set as selected on element
+          selectedArray = [website]; // website selected to element added to array
+        }
       };
+    };
 
     currentRow.onclick = createClickHandler(currentRow);
   }

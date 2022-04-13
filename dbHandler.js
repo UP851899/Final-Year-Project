@@ -49,18 +49,21 @@ export async function newWebsite(website, index) {
   db.run('INSERT INTO blockedSites(site_address, filter_ID) VALUES (?, ?)', [website, index]);
 }
 
+// Add new filter to db
 export async function newFilter(filter) {
   const db = await dbConnect;
   db.run('INSERT INTO websiteFilters(filter_name) VALUES (?)', [filter]);
 }
 
+// Delete a website from the db
 export async function removeWebsite(website) {
   const db = await dbConnect;
-  db.run('DELETE FROM blockedSites WHERE blockSites.site_address = (?)', [website]);
+  db.run('DELETE FROM blockedSites WHERE site_address = (?)', [website]);
 }
 
+// Update a website and its filter
 export async function updateWebsite(websiteOriginal, websiteNew, indexNew) {
   const db = await dbConnect;
-  db.run('UPDATE blockSites SET site_address = (?), filter_ID = (?) WHERE site_address = (?)',
+  db.run('UPDATE blockedSites SET site_address = (?), filter_ID = (?) WHERE site_address = (?)',
     [websiteNew, indexNew, websiteOriginal]);
 }
