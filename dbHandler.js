@@ -67,3 +67,12 @@ export async function updateWebsite(websiteOriginal, websiteNew, indexNew) {
   db.run('UPDATE blockedSites SET site_address = (?), filter_ID = (?) WHERE site_address = (?)',
     [websiteNew, indexNew, websiteOriginal]);
 }
+
+// Verify username and password
+export async function findUser(username, password) {
+  const db = await dbConnect;
+  // q = 'SELECT * FROM admin WHERE admin_username = (?) AND admin_password = (?)';
+  // return db.run(q, [username, password]);
+  // console.log(db.all('SELECT * FROM admin WHERE admin_username = (?) AND admin_password = (?)', [username, password]));
+  return db.all('SELECT * FROM admin WHERE admin_username = (?) AND admin_password = (?)', [username, password]);
+}

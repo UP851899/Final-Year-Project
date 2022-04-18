@@ -44,6 +44,7 @@
 
 .top-nav #right .log-out {
     background-color: var(--white);
+    color: black;
     border: none;
     padding: 5px 30px 5px 30px;
     border-radius: 15px;
@@ -54,6 +55,7 @@
     margin-top: 10px;
     font-family: var(--font);
     font-weight: var(--regular);
+    text-decoration: none;
 }
 
 

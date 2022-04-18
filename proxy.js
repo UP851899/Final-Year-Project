@@ -1,6 +1,4 @@
-import { BADNAME } from 'dns';
 import { createRequire } from 'module';
-import { devNull } from 'os';
 import * as db from './dbHandler.js';
 
 const require = createRequire(import.meta.url); // allows use of require in file
@@ -10,19 +8,95 @@ const http = require('http');
 const url = require('url');
 const net = require('net');
 const proxyPort = 443; // Port for proxy running on this machines local IP
-const hostIP = '0.0.0.0';
+const hostIP = '0.0.0.0'; // Local IP of machine running
 
-// Express front end server setup \\
+// Express front end server setup & auth \\
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 const expressPort = 8080;
+const path = require('path');
+
 app.listen(expressPort, hostIP, (e) => {
   console.log(`web server ${e ? 'failed to start' : `listening on port ${expressPort}`}`);
 });
 
 app.use(express.json());
-app.use('/', express.static('frontend', { extensions: ['html'] }));
+
+// Authentication \\
+
+const session = require('express-session');
+const __dirname = path.resolve();
+
+app.use(session( {
+  secret: 'dashboard',
+  saveUninitialized: true,
+  resave: true,
+}));
+
+app.use(express.urlencoded({
+  extended: true
+}));
+
+app.use(express.static(path.join(__dirname, '/frontend/style'))); // set style folder
+app.use(express.static(path.join(__dirname, '/frontend/images'))); // set images folder
+app.use(express.static(path.join(__dirname, '/frontend/script'))); // set script folder
+
+app.get('/', (req, res, next) => { // Users will only get login 
+  if (!req.session.admin) { // If not admin, load login form 
+    res.sendFile(__dirname + '/frontend/login.html');
+  } else { // If admin session is already set, move to blocking page
+    res.redirect(301, '/blocking.html')
+  }
+})
+
+app.post('/authenticate', async (req, res, next) => {
+  let username = req.body.username;
+  let password = req.body.password
+  let result = await findUsers(username, password);
+
+  if (result.length > 0) {
+    console.log('correct')
+
+    // Set sessions logged in status for verification
+    req.session.admin = true;
+    req.session.user = username;
+    req.session.save() // Save needed so it works in app.post functions
+    // console.log(req.session)
+
+    // Redirect to default page
+    await res.redirect(301, '/blocking.html');
+  } else {
+    console.log('incorrect');
+    res.send('Username and/or Password incorrect')
+  }
+  res.end();
+})
+
+async function findUsers(username, password) {
+  let result = []
+  result = await db.findUser(username, password)
+  return result;
+}
+
+app.get('/blocking.html', async function(req, res, next) {
+	// If the user is admin
+	if (req.session.admin) {
+		// Output username
+		return res.sendFile(__dirname + '/frontend/blocking.html') 
+	} else {
+    // Redirect to login if user is not logged in
+		res.redirect('/');
+	}
+	res.end();
+});
+
+app.get('/logout', (req, res, next) => {
+  req.session.admin = false; // Changes session details to false
+  res.redirect('/');
+})
+
+// -------------------- \\
 
 // body-parser config for expreess
 app.use(bodyParser.urlencoded({ extended: true })) 
@@ -33,10 +107,9 @@ let blockList;
 await getWebsites();
 
 // Function to refresh the blockList array with any changes made by user
-const refreshBlocklist = setInterval(() => {
-  getWebsites();
-  // console.log('blocklist updated'); // Testing update
-  // console.log(blockList);
+const refreshBlocklist = setInterval( async () => {
+  await getWebsites();
+  console.log('blocklist updated'); // Testing update
 }, 60000) // 60000ms
 
 
@@ -141,6 +214,8 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
+// Database functionality \\
+
 // Get websites for blocking functionality
 async function getWebsites() {
   const result = await db.getURLS();
@@ -221,3 +296,5 @@ app.post('/deleteWebsite', (req, res, next) => {
     res.redirect('/blocking.html')
   }
 })
+
+// ---------------------- \\
