@@ -11,7 +11,7 @@ const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0'; // Local IP of machine running
 
 // Express front end server setup & auth \\
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const expressPort = 8080;
@@ -28,78 +28,78 @@ app.use(express.json());
 const session = require('express-session');
 const __dirname = path.resolve();
 
-app.use(session( {
+app.use(session({
   secret: 'dashboard',
   saveUninitialized: true,
   resave: true,
 }));
 
 app.use(express.urlencoded({
-  extended: true
+  extended: true,
 }));
 
 app.use(express.static(path.join(__dirname, '/frontend/style'))); // set style folder
 app.use(express.static(path.join(__dirname, '/frontend/images'))); // set images folder
 app.use(express.static(path.join(__dirname, '/frontend/script'))); // set script folder
 
-app.get('/', (req, res, next) => { // Users will only get login 
-  if (!req.session.admin) { // If not admin, load login form 
+app.get('/', (req, res, next) => { // Users will only get login
+  if (!req.session.admin) { // If not admin, load login form
     res.sendFile(__dirname + '/frontend/login.html');
   } else { // If admin session is already set, move to blocking page
-    res.redirect(301, '/blocking.html')
+    res.redirect(301, '/blocking.html');
   }
-})
+});
 
 app.post('/authenticate', async (req, res, next) => {
-  let username = req.body.username;
-  let password = req.body.password
-  let result = await findUsers(username, password);
+  const username = req.body.username;
+  const password = req.body.password;
+  const result = await findUsers(username, password);
 
   if (result.length > 0) {
-    console.log('correct')
+    console.log('correct');
 
     // Set sessions logged in status for verification
     req.session.admin = true;
     req.session.user = username;
-    req.session.save() // Save needed so it works in app.post functions
+    req.session.save(); // Save needed so it works in app.post functions
     // console.log(req.session)
 
     // Redirect to default page
     await res.redirect(301, '/blocking.html');
   } else {
     console.log('incorrect');
-    res.send('Username and/or Password incorrect')
+    res.send('Username and/or Password incorrect');
   }
   res.end();
-})
+});
 
 async function findUsers(username, password) {
-  let result = []
-  result = await db.findUser(username, password)
+  let result = [];
+  result = await db.findUser(username, password);
   return result;
 }
 
-app.get('/blocking.html', async function(req, res, next) {
-	// If the user is admin
-	if (req.session.admin) {
-		// Output username
-		return res.sendFile(__dirname + '/frontend/blocking.html') 
-	} else {
+app.get('/blocking.html', async function (req, res, next) {
+  // If the user is admin
+  if (req.session.admin) {
+    // Output username
+    return res.sendFile(__dirname + '/frontend/blocking.html');
+  } else {
     // Redirect to login if user is not logged in
-		res.redirect('/');
-	}
-	res.end();
+    res.redirect('/');
+  }
+  res.end();
 });
 
 app.get('/logout', (req, res, next) => {
   req.session.admin = false; // Changes session details to false
   res.redirect('/');
-})
+});
 
 // -------------------- \\
 
 // body-parser config for expreess
-app.use(bodyParser.urlencoded({ extended: true })) 
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // Collect array of website blocking parameters
@@ -107,10 +107,10 @@ let blockList;
 await getWebsites();
 
 // Function to refresh the blockList array with any changes made by user
-const refreshBlocklist = setInterval( async () => {
+const refreshBlocklist = setInterval(async () => {
   await getWebsites();
   console.log('blocklist updated'); // Testing update
-}, 60000) // 60000ms
+}, 60000); // 60000ms
 
 
 const server = http.createServer((req, res) => {
@@ -157,7 +157,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
   let hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
   console.log('HTTPS request:', hostDomain, hostPort);
- 
+
   // Comparing the domain to each blocked site in the database array
   for (const url of blockList) {
     if ((hostDomain).indexOf(url) > -1) {
@@ -180,6 +180,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
 
     proxySocket.connect(hostPort, hostDomain, () => {
       proxySocket.write(bodyhead);
+      // Writing to head needed for website to load. HTTP Headers
       socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
     });
 
@@ -192,6 +193,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
     });
 
     proxySocket.on('error', function () {
+      // Writing to head needed for website to load. HTTP Headers
       socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
       socket.end();
     });
@@ -227,7 +229,7 @@ async function getWebsites() {
 async function getWebsitesJson(req, res) {
   let result = [];
   result = await db.siteFilter();
-  return res.json(result)
+  return res.json(result);
 }
 
 // Get filters for dashboard display
@@ -251,50 +253,50 @@ app.get('/filters', asyncWrap(getFiltersJson));
 // Grabs values when user saves on "add website"
 app.post('/newWebsite', (req, res, next) => {
   try {
-    db.newWebsite(req.body.website, req.body.id)
+    db.newWebsite(req.body.website, req.body.id);
     // console.log(req.body.website); // For testing
     // console.log(req.body.id);
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
     next();
-  } catch(err) {
+  } catch (err) {
     console.log(err);
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
   }
-})
+});
 
 // Grabs values when user saves on "add filter"
 app.post('/newFilter', (req, res, next) => {
   try {
-    db.newFilter(req.body.filter)
+    db.newFilter(req.body.filter);
     // console.log(req.body.filter); // For testing
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
     next();
-  } catch(err) {
+  } catch (err) {
     console.log(err);
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
   }
-})
+});
 
 app.post('/updateWebsite', (req, res, next) => {
   try {
     db.updateWebsite(req.body.originalWebsite, req.body.newWebsite, req.body.newFilter);
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
     next();
-  } catch(err) {
-    console.log(err)
-    res.redirect('/blocking.html')
+  } catch (err) {
+    console.log(err);
+    res.redirect('/blocking.html');
   }
-})
+});
 
 app.post('/deleteWebsite', (req, res, next) => {
   try {
-    db.removeWebsite(req.body.website)
-    res.redirect('/blocking.html')
+    db.removeWebsite(req.body.website);
+    res.redirect('/blocking.html');
     next();
-  } catch(err) {
+  } catch (err) {
     console.log(err);
-    res.redirect('/blocking.html')
+    res.redirect('/blocking.html');
   }
-})
+});
 
 // ---------------------- \\
