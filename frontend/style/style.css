@@ -3,11 +3,13 @@
 
 :root {
     /* Colours */
-    --white: #EEEEEE;
+    --white: #FFFFFF;
+    --cultured: #EEEEEE;
     --lighterGrey: #9b9b9b;
     --lightGrey: #393E46;
     --darkGrey: #222831;
-    --blue: #00ADB5;
+    --black: #000000;
+    --blue: #008289;
 
     /* Font and weighting */
     --font: 'Open Sans', sans-serif;
@@ -43,7 +45,7 @@
 }
 
 .top-nav #right .log-out {
-    background-color: var(--white);
+    background-color: var(--cultured);
     color: black;
     border: none;
     padding: 5px 30px 5px 30px;
@@ -72,7 +74,7 @@
     font-family: var(--font);
     font-weight: var(--regular);
     font-size: 1.5em;
-    color: var(--white)
+    color: var(--cultured)
 }
 
 .side-nav ul {
@@ -89,11 +91,11 @@
 .side-nav ul li {
     padding: 4em 0 0 0;
     text-align: center;
-    color: var(--white)
+    color: var(--cultured)
 }
 
 .side-nav li a:link, a:visited, a:focus {
-    color: var(--white);
+    color: var(--cultured);
     text-decoration: none;
 }
 
@@ -113,7 +115,7 @@
 }
 
 .filter-box {
-    background-color: var(--white);
+    background-color: var(--cultured);
     height: 100%;
     width: 50%;
     max-width: 25em;
@@ -135,7 +137,7 @@
 
 /* Block list table */
 .block-box {
-    background-color: var(--white);
+    background-color: var(--cultured);
     width: 68%;
     min-width: 27em;
     padding-left: 2%;
@@ -190,7 +192,7 @@
 body button {
     font-family: var(--font);
     font-weight: var(--regular);
-    color: white;
+    color: var(--white);
     font-size: 20px;
     background: var(--blue);
     padding: 10px 15px;
@@ -236,7 +238,7 @@ body button {
   .add-website-content, 
   .add-filter-content,
   .edit-website-content {
-    background-color: var(--white);
+    background-color: var(--cultured);
     margin: auto;
     padding: 20px;
     border: 1px solid var(--lighterGrey);
