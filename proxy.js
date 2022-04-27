@@ -13,29 +13,31 @@ const hostIP = '0.0.0.0'; // Local IP of machine running
 // Express front end server setup & auth \\
 const bodyParser = require('body-parser');
 const express = require('express');
-const app = express();
-const expressPort = 8080;
 const path = require('path');
+const app = express();
+const expressPort = 8080; // Port for express server
 
 app.listen(expressPort, hostIP, (e) => {
   console.log(`web server ${e ? 'failed to start' : `listening on port ${expressPort}`}`);
 });
 
-app.use(express.json());
+app.use(express.json()); // Parse incoming JSON requests into req.body
 
-// Authentication \\
+// ------------------------ \\
+// ---- Authentication ---- \\
+// ------------------------ \\
 
 const session = require('express-session');
-const __dirname = path.resolve();
+const __dirname = path.resolve(); //setup __dirname to be used
 
 app.use(session({
-  secret: 'dashboard',
-  saveUninitialized: true,
-  resave: true,
+  secret: 'dashboard', // Secret key
+  saveUninitialized: true, // Forces uninitialized sessions to be saved
+  resave: true, // Forces session to be saved
 }));
 
 app.use(express.urlencoded({
-  extended: true,
+  extended: true, // Parses incoming requests
 }));
 
 app.use(express.static(path.join(__dirname, '/frontend/style'))); // set style folder
@@ -44,7 +46,7 @@ app.use(express.static(path.join(__dirname, '/frontend/script'))); // set script
 
 app.get('/', (req, res, next) => { // Users will only get login
   if (!req.session.admin) { // If not admin, load login form
-    res.sendFile(__dirname + '/frontend/login.html');
+    res.sendFile(__dirname + '/frontend/login.html'); // Login page in HTML
   } else { // If admin session is already set, move to blocking page
     res.redirect(301, '/blocking.html');
   }
@@ -58,35 +60,24 @@ app.post('/authenticate', async (req, res, next) => {
   if (result.length > 0) {
     console.log('correct');
 
-    // Set sessions logged in status for verification
-    req.session.admin = true;
+    req.session.admin = true; // Set sessions logged in status for verification
     req.session.user = username;
     req.session.save(); // Save needed so it works in app.post functions
-    // console.log(req.session)
 
-    // Redirect to default page
-    await res.redirect(301, '/blocking.html');
+    await res.redirect(301, '/blocking.html'); // Redirect to default page
   } else {
     console.log('incorrect');
     res.send('Username and/or Password incorrect');
   }
-  res.end();
+  res.end(); // End response process
 });
-
-async function findUsers(username, password) {
-  let result = [];
-  result = await db.findUser(username, password);
-  return result;
-}
 
 app.get('/blocking.html', async function (req, res, next) {
   // If the user is admin
   if (req.session.admin) {
-    // Output username
     return res.sendFile(__dirname + '/frontend/blocking.html');
   } else {
-    // Redirect to login if user is not logged in
-    res.redirect('/');
+    res.redirect('/'); // Redirect to login if user is not logged in
   }
   res.end();
 });
@@ -97,8 +88,10 @@ app.get('/logout', (req, res, next) => {
 });
 
 // -------------------- \\
-
-// body-parser config for expreess
+// --- Proxy Server --- \\
+// -------------------- \\
+ 
+// body-parser config for express
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -216,12 +209,14 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
-// Database functionality \\
+// ------------------------------ \\
+// --- Database functionality --- \\
+// ------------------------------ \\
 
 // Get websites for blocking functionality
 async function getWebsites() {
   const result = await db.getURLS();
-  const array = result.map((value) => value.address);
+  const array = result.map((value) => value.address); // .map used to extract specific values, .address in response
   blockList = array;
 }
 
@@ -229,17 +224,25 @@ async function getWebsites() {
 async function getWebsitesJson(req, res) {
   let result = [];
   result = await db.siteFilter();
-  return res.json(result);
+  return res.json(result); // Return as JSON for HTTP POST
 }
 
 // Get filters for dashboard display
 async function getFiltersJson(req, res) {
   const result = await db.getFilters();
-  const array = result.map((value) => value.filter);
-  return res.json(array);
+  const array = result.map((value) => value.filter); // .map used to extract specific values, .filter in response
+  return res.json(array); // Return as JSON for HTTP POST
+}
+
+// Database query to find a user with given usernames and password
+async function findUsers(username, password) { 
+  let result = [];
+  result = await db.findUser(username, password);
+  return result;
 }
 
 // async wrap for functions, deals with promises and errors with database queries
+// Could possibly be replaced with express-async-wrap - Look at in future to reduce code use
 function asyncWrap(f) {
   return (req, res, next) => {
     Promise.resolve(f(req, res, next))
