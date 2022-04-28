@@ -3,12 +3,13 @@
 
 :root {
     /* Colours */
-    --white: #EEEEEE;
+    --white: #FFFFFF;
+    --cultured: #EEEEEE;
     --lighterGrey: #9b9b9b;
     --lightGrey: #393E46;
     --darkGrey: #222831;
-    --blue: #00ADB5;
-    --darkerBlue: #00939b;
+    --black: #000000;
+    --blue: #008289;
 
     /* Font and weighting */
     --font: 'Open Sans', sans-serif;
@@ -30,7 +31,7 @@ body {
     flex-direction: column;
     width: 50%;
     max-width: 25em;
-    background-color: var(--white);
+    background-color: var(--cultured);
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     margin: 100px auto;
     font-family: var(--font);
@@ -73,7 +74,7 @@ body {
     width: 50px;
     height: 50px;
     background-color: var(--blue);
-    color: #ffffff;
+    color: var(--white);
 }
 
 .login form input[type="password"], .login form input[type="text"] {
@@ -92,7 +93,7 @@ body {
     border: 0;
     cursor: pointer;
     font-weight: var(--bold);
-    color: #ffffff;
+    color: var(--white);
     transition: background-color 0.2s;
 }
 
