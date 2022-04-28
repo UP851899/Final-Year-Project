@@ -31,6 +31,7 @@ body {
     flex-direction: column;
     width: 50%;
     max-width: 25em;
+    min-width: 400px;
     background-color: var(--cultured);
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
     margin: 100px auto;

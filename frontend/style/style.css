@@ -143,6 +143,13 @@
     padding-left: 2%;
 }
 
+@media only screen and (max-width: 1200px) {
+    .block-box {
+        width: 85%;
+        margin-top: 2em;
+    }
+}
+
 .block-box #block-table {
     border:none;
     border-collapse: collapse;
