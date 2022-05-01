@@ -1,13 +1,12 @@
 import { createRequire } from 'module';
-import { hostname } from 'os';
-import * as db from './dbHandler.js';
+import * as db from './modules/dbHandler.js';
+import * as ex from './modules/executeHTTPS.js'
 
 const require = createRequire(import.meta.url); // allows use of require in file
 
 const httpProxy = require('http-proxy');
 const http = require('http');
 const url = require('url');
-const net = require('net');
 const proxyPort = 443; // Port for proxy running on this machines local IP
 const hostIP = '0.0.0.0'; // Local IP of machine running
 
@@ -150,7 +149,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
   const hostSplitArray = getHostInfo(req.url, 443);
   let hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
-  console.log('HTTPS request:', hostDomain, hostPort);
+  console.log('HTTPS request:', hostDomain);
 
   // Comparing the domain to each blocked site in the database array
   for (const url of blockList) {
@@ -160,50 +159,8 @@ server.addListener('connect', (req, socket, bodyhead) => {
       break; // breaks loop to execute the request with null domain value
     }
   }
-  executeRequest();
-
-  // Execute the HTTPS requests
-  function executeRequest() {
-    // node.js net.socket creates a TCP client which allows us intercept the HTTPS requests
-    const proxySocket = new net.Socket();
-
-    // If website is on blocklist, hostDomain was set to null, .end() will stop the request and continue to next
-    if (hostDomain == null) {
-      proxySocket.end();
-    }
-
-    proxySocket.connect(hostPort, hostDomain, () => {
-      proxySocket.write(bodyhead);
-      // Writing to head needed for website to load. HTTP Headers
-      socket.write('HTTP/' + req.httpVersion + ' 200 Connection established\r\n\r\n');
-    });
-
-    proxySocket.on('data', (chunk) => {
-      socket.write(chunk);
-    });
-
-    proxySocket.on('end', () => {
-      socket.end();
-    });
-
-    proxySocket.on('error', function () {
-      // Writing to head needed for website to load. HTTP Headers
-      socket.write('HTTP/' + req.httpVersion + ' 500 Connection error\r\n\r\n');
-      socket.end();
-    });
-
-    socket.on('data', (chunk) => {
-      proxySocket.write(chunk);
-    });
-
-    socket.on('end', () => {
-      proxySocket.end();
-    });
-
-    socket.on('error', function () {
-      proxySocket.end();
-    });
-  }
+  // Executes the HTTPS request in executeHTTPS script in modules
+  ex.executeRequest(req, socket, bodyhead, hostDomain, hostPort)
 });
 
 server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
