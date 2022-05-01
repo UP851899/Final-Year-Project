@@ -97,14 +97,13 @@ app.use(bodyParser.json());
 
 // Collect array of website blocking parameters
 let blockList;
-await getWebsites();
+// await getWebsites();
 
 // Function to refresh the blockList array with any changes made by user
-const refreshBlocklist = setInterval(async () => {
-  await getWebsites();
-  console.log('blocklist updated'); // Testing update
-}, 60000); // 60000ms
-
+blockList = setInterval(async () => {
+  console.log('Blocklist updated');
+  return await getWebsites();
+}, 60000);
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
@@ -167,9 +166,9 @@ server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will 
   console.log('Proxy running of port 443');
 }); // this is the port your clients will connect to
 
-// ------------------------------ \\
-// --- Database functionality --- \\
-// ------------------------------ \\
+// ------------------------------------------- \\
+// --- Database functionality with express --- \\
+// ------------------------------------------- \\
 
 // Get websites for blocking functionality
 async function getWebsites() {
@@ -260,4 +259,4 @@ app.post('/deleteWebsite', (req, res, next) => {
   }
 });
 
-// ---------------------- \\
+// --------------------------------------------- \\
