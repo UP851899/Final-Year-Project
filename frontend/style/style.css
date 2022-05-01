@@ -1,0 +1,311 @@
+/* Global variables */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+    /* Colours */
+    --white: #FFFFFF;
+    --cultured: #EEEEEE;
+    --lighterGrey: #9b9b9b;
+    --lightGrey: #393E46;
+    --darkGrey: #222831;
+    --black: #000000;
+    --blue: #008289;
+
+    /* Font and weighting */
+    --font: 'Open Sans', sans-serif;
+    --bold: 700;
+    --semiBold: 600;
+    --regular: 400;
+    --light: 300;
+}
+
+/* ---------------- */
+
+.navigations {
+    margin: -10px;
+}
+
+/* Top navigation */
+
+.top-nav {
+    background-color: var(--darkGrey);
+    overflow: hidden;
+    padding: 20px 0px 20px 0px;
+}
+
+.top-nav #left {
+    float: left;
+    padding-left: 5%;
+}
+
+.top-nav #right {
+    float: right;
+    display: flex;
+    padding-right: 5%;
+}
+
+.top-nav #right .log-out {
+    background-color: var(--cultured);
+    color: black;
+    border: none;
+    padding: 5px 30px 5px 30px;
+    border-radius: 15px;
+    font-size: 20px;
+    text-align: center;
+    margin-right: 20px;
+    height: fit-content;
+    margin-top: 10px;
+    font-family: var(--font);
+    font-weight: var(--regular);
+    text-decoration: none;
+}
+
+
+/* -------------- */
+
+
+/* Side navigation */
+
+.side-nav {
+    margin-top: -25px;
+    margin-left: -10px;
+    display: flex;
+    overflow: hidden;
+    font-family: var(--font);
+    font-weight: var(--regular);
+    font-size: 1.5em;
+    color: var(--cultured)
+}
+
+.side-nav ul {
+    background-color: var(--lightGrey);
+    list-style-type: none;
+    position: fixed;
+    width: 10%;
+    max-width: 5em;
+    height: 100%;
+    padding-right: 40px;
+    align-items: center;
+}
+
+.side-nav ul li {
+    padding: 4em 0 0 0;
+    text-align: center;
+    color: var(--cultured)
+}
+
+.side-nav li a:link, a:visited, a:focus {
+    color: var(--cultured);
+    text-decoration: none;
+}
+
+/* --------------- */
+
+/* Body */
+
+/* Filter table */
+.flex-body {
+    display: flex;
+    margin-left: 15em;
+    margin-top: 3em;
+    flex-grow: 5;
+    flex-wrap: wrap;
+    padding-right: 10px;
+    height: 90%;
+}
+
+.filter-box {
+    background-color: var(--cultured);
+    height: 100%;
+    width: 50%;
+    max-width: 25em;
+    margin-right: 2em;
+}
+
+.flex-body h1 {
+    font-family: var(--font);
+    font-weight: var(--bold);
+    padding-left: 1em;
+}
+
+.filter-box ul li {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    list-style: none;
+    padding: 0 0 0.7em 0;
+}
+
+/* Block list table */
+.block-box {
+    background-color: var(--cultured);
+    width: 68%;
+    min-width: 27em;
+    padding-left: 2%;
+}
+
+@media only screen and (max-width: 1200px) {
+    .block-box {
+        width: 85%;
+        margin-top: 2em;
+    }
+}
+
+.block-box #block-table {
+    border:none;
+    border-collapse: collapse;
+
+}
+
+.block-box #block-table th {
+    font-family: var(--font);
+    font-weight: var(--bold);
+    padding-right: 1em;
+    border-bottom: 1px solid var(--lighterGrey);
+}
+
+.block-box #block-table #colOne {
+    padding-right: 10em;
+    min-width: 15em;
+}
+.block-box h1 {
+    margin-left: -30px;
+
+}
+
+.block-box #block-table #colTwo {
+    padding-right: 6em;
+}
+
+.block-box #block-table td {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    padding-bottom: 1em;
+}
+
+.block-box #block-table td:first-child, th:first-child { /* For borders */
+    border-right: 1px solid var(--lighterGrey);
+}
+
+.block-box #block-table tr:hover {
+    background-color: #dfdfdf;
+}
+
+.block-box .selected {
+    background-color: #dfdfdf;
+}
+
+/* Button styling */
+
+body button {
+    font-family: var(--font);
+    font-weight: var(--regular);
+    color: var(--white);
+    font-size: 20px;
+    background: var(--blue);
+    padding: 10px 15px;
+    border-radius: 40px;
+    cursor: pointer;
+    border: none;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.filter-box #add-filter-btn {
+    margin-left: 35px;
+}
+
+
+
+/* ---- */
+
+/* Modal - add website & add filter */
+
+.add-Website-Modal, 
+.add-Filter-Modal,
+.edit-Website-Modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 1; /* Sit on top */
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto;
+    background-color: var(--darkGrey);
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  .modals h2  {
+    font-family: var(--font);
+    font-weight: var(--bold);
+  }
+  
+  /* Modal Content */
+  .add-website-content, 
+  .add-filter-content,
+  .edit-website-content {
+    background-color: var(--cultured);
+    margin: auto;
+    padding: 20px;
+    border: 1px solid var(--lighterGrey);
+    width: 50%;
+  }
+  
+  /* The Close Button */
+  .add-website-content .close-add, 
+  .add-filter-content .close-filter,
+  .edit-website-content .close-edit {
+    color: var(--lighterGrey);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .add-website-content .close-add:hover,
+  .add-website-content .close-add:focus,
+  .add-filter-content .close-filter:hover,
+  .add-filter-content .close-filter:focus,
+  .edit-website-content .close-edit:hover,
+  .edit-website-content .close-edit:focus {
+    color: var(--darkGrey);
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .add-website-content label, input {
+    font-family: var(--font);
+    padding-bottom: 1em;
+  }
+
+  .edit-website-content label, input {
+    font-family: var(--font);
+    padding-bottom: 1em;
+  }
+
+  .add-filter-content label, input {
+    font-family: var(--font);
+    width: 98%;
+  }
+
+  .add-filter-content input {
+    padding: 1em;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+  
+  .add-website-content input, select {
+      width: 90%;
+      padding: 12px 12px;
+      margin-bottom: 40px;
+      display: block;
+  }
+
+  .edit-website-content input, select {
+    width: 90%;
+    padding: 12px 12px;
+    margin-bottom: 40px;
+    display: block;
+}
+
+/* ------------------- */

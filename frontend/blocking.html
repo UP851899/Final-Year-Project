@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<head>
+    <html lang = "en">
+        <meta charset="UTF-8"/>
+        <link rel="shortcut icon" href="#">
+        <link rel="stylesheet" href="style.css">
+        <script type="module" src="index.js"></script>
+        <!-- <script type="module" src="./script/index.js"></script> -->
+</head>
+<body>
+    <div class="navigations">
+        <div class="top-nav">
+
+            <div id="left">
+                <a class="menu-toggle">
+                    <img id='menuToggle' src="menuToggle.svg"/>
+                </a>
+            </div>
+            
+            <div id="right">
+                <a class="log-out" href="/logout">Log Out</a>
+        
+                <a class="user-icon">
+                    <img id="userIcon" src="userIcon.svg"/>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+
+
+    <div class="side-nav">
+    
+        <ul>
+            <li><a class="home" href="index.html">Home</a></li>
+            <li><a id="blocking" href="blocking.html">Website Blocking</a></li>
+            <li><a class="Devices" href="devices.html">Devices</a></li>
+            <li><a class="Admin" href="admin.html">Admin</a></li>
+        </ul>
+    </div>
+
+    <div class="flex-body">
+        <div class="filter-box">
+            <h1>Filters</h1>
+            <ul id="filter-list">
+                <!-- Updated via script -->
+            </ul>
+            <button type="button" id="add-filter-btn">Add Filter</button>
+        </div>
+    
+        <div class="block-box">
+            <h1>Block List</h1>
+            <table id="block-table">
+                <tr>
+                    <th id="colOne"><h2>Website Address OR Keyword</h2></th>
+                    <th id="colTwo"><h2>Filter Name</h2></th>
+                </tr>
+                <tr>
+                    <!-- Script will add rows from DB query -->
+                </tr>
+            </table>
+
+            <!-- Add site button -->
+            <button type="button" id="add-site-btn">Add Website</button>
+            <button type='button' id="edit-site-btn">Edit Website</button>
+        </div>
+    </div>
+
+    <div class="modals">
+
+        <div class="add-Website-Modal">
+            <div class="add-website-content">
+                <span class="close-add">&times;</span>
+                <h2>Add website or keyword</h2>
+
+                <!-- action="/newWebsite" method="POST" removed for javascript version -->
+                <form id="new-website-form">
+                    <label for="website-input">Website address or keyword</label>
+                    <input type="text" id="website" name="website" placeholder="Address or keyword">
+        
+                    <label for="filter-select">Filter</label>
+                    <select id="filter" name="filter">
+                        <option value='null'>Select a filter</option>
+                    </select>
+
+                    <button type="submit" id="submit-website-add">Save</button>
+                    <button type="button" id="close-website-add">Cancel</button>
+                </form>
+
+            </div>
+        </div>
+
+        <div class="edit-Website-Modal">
+            
+            <div class="edit-website-content">
+
+                <span class="close-edit">&times;</span>
+                <form>
+                    <label for="website-edit">Update website address or keyword</label>
+                    <input type="text" id="website-edit" name="website-edit">
+
+                    <label for="filter-update">Filter</label>
+                    <select id="filter-update" name="filter-update">
+                        <option value='null'>Select a filter</option>
+                    </select>
+
+                    <button type="submit" id="submit-website-update">Update</button>
+                    <button type="button" id="close-website-update">Cancel</button>
+                    <button type="button" id="delete-website-update">Delete</button>
+                </form>
+
+            </div>
+            
+        </div>
+
+        <div class="add-Filter-Modal">
+            
+            <div class="add-filter-content">
+                <span class="close-filter">&times;</span>
+                <h2>Add a custom filter</h2>
+                <form id="new-filter-form">
+                    <label for="website-input">Enter name of new filter</label>
+                    <input type="text" id="filter-input" name="filter-input" placeholder="Enter filter name">
+
+                    <button type="submit" id="submit-filter-add">Save</button>
+                    <button type="button" id="close-filter-add">Cancel</button>
+                </form>
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+
+
+
+</html>

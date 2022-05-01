@@ -1,0 +1,108 @@
+/* Global variables */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+:root {
+    /* Colours */
+    --white: #FFFFFF;
+    --cultured: #EEEEEE;
+    --lighterGrey: #9b9b9b;
+    --lightGrey: #393E46;
+    --darkGrey: #222831;
+    --black: #000000;
+    --blue: #008289;
+
+    /* Font and weighting */
+    --font: 'Open Sans', sans-serif;
+    --bold: 700;
+    --semiBold: 600;
+    --regular: 400;
+    --light: 300;
+}
+
+body {
+    background-color: var(--darkGrey);
+    font-family: var(--font);
+    font-weight: var(--regular);
+    font-size: 25px;
+}
+.login {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 50%;
+    max-width: 25em;
+    min-width: 400px;
+    background-color: var(--cultured);
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
+    margin: 100px auto;
+    font-family: var(--font);
+}
+
+.login h1 {
+    text-align: center;
+    color: #5b6574;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+    border-bottom: 1px solid #dee0e4;
+}
+
+.login .first-row {
+    display: flex;
+}
+
+.login .second-row {
+    display: flex;
+}
+
+.login .third-row {
+    display: none;
+    padding-left: 10em;
+    padding-right: 10em;
+    font-size: 15px;
+}
+
+.login form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-top: 20px;
+}
+
+.login form label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.login form input[type="password"], .login form input[type="text"] {
+    width: 310px;
+    height: 50px;
+    border: 1px solid #dee0e4;
+    margin-bottom: 20px;
+    padding: 0 15px;
+}
+
+.login form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background-color: var(--blue);
+    border: 0;
+    cursor: pointer;
+    font-weight: var(--bold);
+    color: var(--white);
+    transition: background-color 0.2s;
+}
+
+.login form input[type="submit"]:hover {
+  background-color: var(--darkerBlue);
+    transition: background-color 0.2s;
+}
+
+.login form p {
+    display: inline-flex;
+}

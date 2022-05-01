@@ -38,4 +38,13 @@ VALUES
     ("amazon.com", 6);
 
 
-    
+-- Login for dashboard --
+CREATE TABLE admin (
+    admin_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_username TEXT NOT NULL,
+    admin_password TEXT NOT NULL
+);
+
+INSERT INTO admin (admin_ID, admin_username, admin_password)
+VALUES
+    (1, "admin", "admin"); -- Default account for testing
