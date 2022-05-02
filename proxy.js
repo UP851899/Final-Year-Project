@@ -97,13 +97,15 @@ app.use(bodyParser.json());
 
 // Collect array of website blocking parameters
 let blockList;
-// await getWebsites();
 
-// Function to refresh the blockList array with any changes made by user
-blockList = setInterval(async () => {
+// Functionality to refresh the blockList array with any changes made by user
+async function setBlockList() {
   console.log('Blocklist updated');
-  return await getWebsites();
-}, 60000);
+  blockList = await getWebsites();
+}
+setBlockList();
+setInterval(setBlockList, 1000);
+
 
 const server = http.createServer((req, res) => {
   const urlParse = url.parse(req.url);
