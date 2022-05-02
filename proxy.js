@@ -95,17 +95,27 @@ app.get('/logout', (req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// // Collect array of website blocking parameters
+// let blockList;
+
+// // Functionality to refresh the blockList array with any changes made by user
+// async function setBlockList() {
+//   console.log('Blocklist updated');
+//   console.log(blockList)
+//   blockList = await getWebsites();
+// }
+// setBlockList();
+// setInterval(setBlockList, 5000);
+
 // Collect array of website blocking parameters
 let blockList;
+await getWebsites();
 
-// Functionality to refresh the blockList array with any changes made by user
-async function setBlockList() {
-  console.log('Blocklist updated');
-  console.log(blockList)
-  blockList = await getWebsites();
-}
-setBlockList();
-setInterval(setBlockList, 5000);
+// Function to refresh the blockList array with any changes made by user
+const refreshBlocklist = setInterval(async () => {
+  await getWebsites();
+  console.log('blocklist updated'); // Testing update
+}, 60000); // 60000ms
 
 
 const server = http.createServer((req, res) => {
