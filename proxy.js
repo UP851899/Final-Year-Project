@@ -1,6 +1,7 @@
 import { createRequire } from 'module';
 import * as ex from './modules/executeHTTPS.js';
 import * as db from './modules/dbHandler.js';
+import * as ghi from './modules/getHostInfo.js';
 
 const require = createRequire(import.meta.url); // allows use of require in file
 
@@ -134,32 +135,13 @@ const server = http.createServer((req, res) => {
   proxy.web(req, res, { target });
 });
 
-// Regular expression to remove hostname, url and just be left with the port
-const regexForPort = /^([^:]+)(:([0-9]+))?$/;
-
-const getHostInfo = (hostString, defaultPort) => {
-  console.log(hostString);
-  let host = hostString;
-  let port = defaultPort; // Being 443, assuming its HTTPS
-
-  const result = regexForPort.exec(host);
-  if (result != null) {
-    host = result[1];
-    if (result[2] != null) {
-      port = result[3];
-    }
-  }
-
-  return ([host, port]);
-};
-
 server.addListener('connect', (req, socket, bodyhead) => {
   /*
   hostSplitArray uses the getHostInfo function to return an array of data from the URL
   what is returned is the domain & the port (usually 433 for https)
   Extracting these individual elements allows us to properly connect to the site
   */
-  const hostSplitArray = getHostInfo(req.url, 443);
+  const hostSplitArray = ghi.getHostInfo(req.url, 443);
   let hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
   console.log('HTTPS request:', hostDomain);

@@ -2,7 +2,7 @@
   "name": "final-year-project",
   "version": "1.0.0",
   "description": "Parental controls & Device management on a home network",
-  "main": "index.js",
+  "main": "proxy.js",
   "type": "module",
   "scripts": {
     "test": "jest",

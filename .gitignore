@@ -5,3 +5,4 @@ key.pem
 csr.pem
 request.csr
 websites.sqlite
+settings.json
