@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint --ext .js --ignore-path .gitignore ."
   },
   "repository": {
@@ -19,19 +19,26 @@
   },
   "homepage": "https://github.com/UP851899/Final-Year-Project#readme",
   "dependencies": {
+    "@babel/core": "^7.17.10",
+    "@babel/node": "^7.17.10",
+    "@babel/preset-env": "^7.17.10",
     "body-parser": "^1.20.0",
+    "core-js": "^3.22.3",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "http": "^0.0.1-security",
     "http-proxy": "^1.18.1",
     "https": "^1.0.0",
+    "regenerator-runtime": "^0.13.9",
+    "save-dev": "^0.0.1-security",
     "sql.js": "^1.6.2",
     "sqlite": "^4.0.25",
     "sqlite3": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^8.10.0",
-    "eslint-config-portsoc": "^1.0.0"
+    "eslint-config-portsoc": "^1.0.0",
+    "jest": "^28.0.3"
   },
   "eslintConfig": {
     "extends": "portsoc",
