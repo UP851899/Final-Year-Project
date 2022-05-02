@@ -1,6 +1,6 @@
 import { createRequire } from 'module';
+import * as ex from './modules/executeHTTPS.js';
 import * as db from './modules/dbHandler.js';
-import * as ex from './modules/executeHTTPS.js'
 
 const require = createRequire(import.meta.url); // allows use of require in file
 
@@ -28,7 +28,7 @@ app.use(express.json()); // Parse incoming JSON requests into req.body
 // ------------------------ \\
 
 const session = require('express-session');
-const __dirname = path.resolve(); //setup __dirname to be used
+const __dirname = path.resolve(); // setup __dirname to be used
 
 app.use(session({
   secret: 'dashboard', // Secret key
@@ -72,7 +72,7 @@ app.post('/authenticate', async (req, res, next) => {
   res.end(); // End response process
 });
 
-app.get('/blocking.html', async function (req, res, next) {
+app.get('/blocking.html', function (req, res, next) {
   // If the user is admin
   if (req.session.admin) {
     return res.sendFile(__dirname + '/frontend/blocking.html');
@@ -90,7 +90,7 @@ app.get('/logout', (req, res, next) => {
 // -------------------- \\
 // --- Proxy Server --- \\
 // -------------------- \\
- 
+
 // body-parser config for express
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -101,10 +101,11 @@ let blockList;
 // Functionality to refresh the blockList array with any changes made by user
 async function setBlockList() {
   console.log('Blocklist updated');
+  console.log(blockList)
   blockList = await getWebsites();
 }
 setBlockList();
-setInterval(setBlockList, 1000);
+setInterval(setBlockList, 5000);
 
 
 const server = http.createServer((req, res) => {
@@ -127,6 +128,7 @@ const server = http.createServer((req, res) => {
 const regexForPort = /^([^:]+)(:([0-9]+))?$/;
 
 const getHostInfo = (hostString, defaultPort) => {
+  console.log(hostString);
   let host = hostString;
   let port = defaultPort; // Being 443, assuming its HTTPS
 
@@ -161,7 +163,7 @@ server.addListener('connect', (req, socket, bodyhead) => {
     }
   }
   // Executes the HTTPS request in executeHTTPS script in modules
-  ex.executeRequest(req, socket, bodyhead, hostDomain, hostPort)
+  ex.executeRequest(req, socket, bodyhead, hostDomain, hostPort);
 });
 
 server.listen(proxyPort, hostIP, () => { // Proxy will run on port 443 and will be accessible on the local PCs IP
@@ -194,7 +196,7 @@ async function getFiltersJson(req, res) {
 }
 
 // Database query to find a user with given usernames and password
-async function findUsers(username, password) { 
+async function findUsers(username, password) {
   let result = [];
   result = await db.findUser(username, password);
   return result;
