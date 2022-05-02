@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1651504017759" clover="3.2.0">
-  <project timestamp="1651504017759" name="All files">
+<coverage generated="1651507441282" clover="3.2.0">
+  <project timestamp="1651507441282" name="All files">
     <metrics statements="29" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="11" coveredmethods="4" elements="40" coveredelements="16" complexity="0" loc="29" ncloc="29" packages="1" files="1" classes="1"/>
     <file name="dbHandler.js" path="N:\OneDrive\Uni\Year 3\FYP\Implementation\FYP\Final-Year-Project-1\modules\dbHandler.js">
       <metrics statements="29" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="11" coveredmethods="4"/>

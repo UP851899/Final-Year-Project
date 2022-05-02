@@ -1,7 +1,7 @@
 node_modules
+coverage
 cert.pem
 key.pem
 csr.pem
 request.csr
 websites.sqlite
-coverage
