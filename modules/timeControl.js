@@ -7,9 +7,6 @@ const date = require('date-and-time');
 // Export blockList to proxy, can be read and adjusted
 export const timeControlBlock = new net.BlockList();
 
-// Add test IP to blockList
-// timeControlBlock.addAddress('192.168.1.216');
-
 // Date object
 const now = new Date();
 // const hourStyle = date.compile('H');
@@ -24,8 +21,8 @@ if ((date.format(now, hourMinuteStyle)) === '09:09') {
 
 export function checkTime() {
   const now = new Date();
-  if ((date.format(now, hourMinuteStyle)) === '09:21') {
+  if ((date.format(now, hourMinuteStyle)) === '09:21') { // Can be replaced with variable from db
     console.log('Blocking device due to time');
-    timeControlBlock.addAddress('192.168.1.216');
+    timeControlBlock.addAddress('192.168.1.216'); // Adds IP to timeControl blocklist
   }
 }

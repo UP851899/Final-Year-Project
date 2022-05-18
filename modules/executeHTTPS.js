@@ -12,6 +12,8 @@ export function executeRequest(req, socket, bodyhead, hostDomain, hostPort) {
     proxySocket.end();
   }
 
+  // Event listeners on TCP socket \\
+
   proxySocket.connect(hostPort, hostDomain, () => {
     proxySocket.write(bodyhead);
     // Writing to head needed for website to load. HTTP Headers
