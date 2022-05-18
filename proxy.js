@@ -2,6 +2,8 @@ import { createRequire } from 'module';
 import * as db from './modules/dbHandler.js';
 import * as ex from './modules/executeHTTPS.js'
 import * as ghi from './modules/getHostInfo.js';
+import * as cd from './modules/childDevices.js';
+import * as tc from './modules/timeControl.js'
 
 const require = createRequire(import.meta.url); // allows use of require in file
 
@@ -96,19 +98,6 @@ app.get('/logout', (req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Duplicate section for blockList was working until now
-// // Collect array of website blocking parameters
-// let blockList;
-// blockList = await getWebsites();
-
-// // Functionality to refresh the blockList array with any changes made by user
-// async function setBlockList() {
-//   console.log('Blocklist updated');
-//   blockList = await getWebsites();
-// }
-// setBlockList();
-// setInterval(setBlockList, 1000);
-
 // Collect array of website blocking parameters
 let blockList;
 await getWebsites();
@@ -145,17 +134,33 @@ server.addListener('connect', (req, socket, bodyhead) => {
   const hostSplitArray = ghi.getHostInfo(req.url, 443);
   let hostDomain = hostSplitArray[0];
   const hostPort = parseInt(hostSplitArray[1]);
-  console.log('HTTPS request:', hostDomain);
 
-  // Comparing the domain to each blocked site in the database array
-  for (const url of blockList) {
-    if ((hostDomain).indexOf(url) > -1) {
-      console.log('Blocked!', hostDomain);
-      hostDomain = null; // Remove domain address from request
-      break; // breaks loop to execute the request with null domain value
+  // IP address from request
+  let requestIp = req.ip 
+            || req.socket.remoteAddress;
+  console.log(requestIp)
+
+  if(!cd.blockList.check(requestIp) && (!tc.timeControlBlock.check(requestIp))) {
+    console.log("Device is free!")
+  } else {
+    // Comparing the domain to each blocked site in the database array
+    for (const url of blockList) {
+      if ((hostDomain).indexOf(url) > -1) {
+        console.log('HTTPS request:', hostDomain);
+        console.log('Blocked!', hostDomain);
+        hostDomain = null; // Remove domain address from request
+        break; // breaks loop to execute the request with null domain value
+      }
     }
   }
-  // Executes the HTTPS request in executeHTTPS script in modules
+
+  // Time check for device
+  tc.checkTime();
+  if(tc.timeControlBlock.check(requestIp)){
+    hostDomain = null;
+  }
+
+  // // Executes the HTTPS request in executeHTTPS script in modules
   ex.executeRequest(req, socket, bodyhead, hostDomain, hostPort)
 });
 

@@ -20,11 +20,13 @@
   "homepage": "https://github.com/UP851899/Final-Year-Project#readme",
   "dependencies": {
     "body-parser": "^1.20.0",
+    "date-and-time": "^2.3.1",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
     "http": "^0.0.1-security",
     "http-proxy": "^1.18.1",
     "https": "^1.0.0",
+    "net": "^1.0.2",
     "sql.js": "^1.6.2",
     "sqlite": "^4.0.25",
     "sqlite3": "^4.2.0"
